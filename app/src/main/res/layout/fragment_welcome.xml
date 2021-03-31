@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_fw_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_fw_ripple_start"
+        android:elevation="18dp"
+        android:text="开始保护您的牙齿"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_fw_change_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="切换用户"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:textColor="@color/blue"
+        >
+    </TextView>
+
+</LinearLayout>

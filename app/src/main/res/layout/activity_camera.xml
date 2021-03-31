@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".camera.CameraActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/btn_camera_takephotoswithcamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/bg_main_ripple_btn_2"
+            android:drawableTop="@mipmap/ic_takephotos"
+            android:padding="10dp"
+            android:text="拍照" />
+
+        <Button
+            android:id="@+id/btn_camera_takephotosfromassets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_main_ripple_btn_3"
+            android:drawableTop="@mipmap/ic_album"
+            android:padding="10dp"
+            android:text="从相册中选择" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_camera_takephotos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp" />
+
+</LinearLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fo_am_month"
+        android:icon="@mipmap/ic_am_month"
+        android:title="月" />
+
+    <item
+        android:id="@+id/fo_am_week"
+        android:icon="@mipmap/ic_am_week"
+        android:title="日" />
+
+</menu>
