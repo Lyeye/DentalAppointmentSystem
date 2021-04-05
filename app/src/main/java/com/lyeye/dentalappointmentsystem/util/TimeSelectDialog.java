@@ -16,14 +16,13 @@ import androidx.annotation.Nullable;
 
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.appointment.DateSelectionActivity;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
+import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
@@ -36,9 +35,10 @@ public class TimeSelectDialog extends Dialog {
     private Context context;
     private String dateSelected;
     private String symptom;
-    private String userName;
+    private long userId;
     private List<String> hasAppointmentTimes = new ArrayList<>();
     private SharedPreferences sharedPreferences;
+    private AppointmentInfoImpl appointmentInfoImpl;
 
     public TimeSelectDialog(@NonNull Context context) {
         super(context);
@@ -75,24 +75,15 @@ public class TimeSelectDialog extends Dialog {
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    BmobAppointmentInfo bmobAppointmentInfo = new BmobAppointmentInfo();
-                                    bmobAppointmentInfo.setUserName(userName);
-                                    bmobAppointmentInfo.setAmiDate(dateSelected);
-                                    bmobAppointmentInfo.setAmiTime(button.getText().toString());
-                                    bmobAppointmentInfo.setAmiSymptoms(symptom);
-                                    bmobAppointmentInfo.save(new SaveListener<String>() {
-                                        @Override
-                                        public void done(String s, BmobException e) {
-                                            if (e == null) {
-                                                ToastUtil.showMsg(context, "添加成功,id:" + bmobAppointmentInfo.getObjectId());
-                                                Intent intent = new Intent(context, MainActivity.class);
-                                                context.startActivity(intent);
-                                            } else {
-                                                ToastUtil.showMsg(context, "添加失败,异常:" + e.getMessage());
-                                                sweetAlertDialog.cancel();
-                                            }
-                                        }
-                                    });
+                                    AppointmentInfo appointmentInfo = new AppointmentInfo();
+                                    appointmentInfo.setUserId(userId);
+                                    appointmentInfo.setAmiDate(dateSelected);
+                                    appointmentInfo.setAmiTime(button.getText().toString());
+                                    appointmentInfo.setAmiSymptoms(symptom);
+                                    appointmentInfoImpl.insertAppointmentInfo(appointmentInfo);
+                                    ToastUtil.showMsg(context, "添加成功,id:" + appointmentInfo.getAmiId());
+                                    Intent intent = new Intent(context, MainActivity.class);
+                                    context.startActivity(intent);
                                 }
                             })
                             .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -116,7 +107,6 @@ public class TimeSelectDialog extends Dialog {
             }
         });
     }
-
 
 
     private void init() {
@@ -145,8 +135,9 @@ public class TimeSelectDialog extends Dialog {
 
         textView_cancel = view.findViewById(R.id.tv_td_cancel);
 
+        appointmentInfoImpl = new AppointmentInfoImpl(context);
         sharedPreferences = context.getSharedPreferences("user_info", Context.MODE_PRIVATE);
-        userName = sharedPreferences.getString("username", "");
+        userId = sharedPreferences.getLong("userId", 999999999);
 
         Log.d(null, "hasAppointments: " + hasAppointmentTimes.size());
 

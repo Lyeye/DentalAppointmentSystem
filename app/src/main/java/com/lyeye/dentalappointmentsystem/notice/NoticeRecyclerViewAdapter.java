@@ -1,7 +1,6 @@
 package com.lyeye.dentalappointmentsystem.notice;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.User;
+import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
 
 import java.util.List;
 
@@ -20,9 +21,10 @@ import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
 public class NoticeRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     private Context context;
-    private List<BmobAppointmentInfo> noticeList;
+    private List<AppointmentInfo> noticeList;
+    private UserImpl userImpl;
 
-    public NoticeRecyclerViewAdapter(Context context, List<BmobAppointmentInfo> noticeList) {
+    public NoticeRecyclerViewAdapter(Context context, List<AppointmentInfo> noticeList) {
         this.context = context;
         this.noticeList = noticeList;
     }
@@ -36,8 +38,10 @@ public class NoticeRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ((NoticeRecyclerViewHolder) holder).textView_notice.setText("       尊敬的" + noticeList.get(position).getUserName() + "先生/女士，请于" + noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime() + "前往所在医院就诊。");
-        ((NoticeRecyclerViewHolder) holder).textView_time.setText(noticeList.get(position).getCreatedAt());
+        userImpl = new UserImpl(context);
+        User userById = userImpl.findUserById(noticeList.get(position).getUserId());
+        ((NoticeRecyclerViewHolder) holder).textView_notice.setText("       尊敬的" + userById.getUserName() + "先生/女士，请于" + noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime() + "前往" + userById.getAffiliatedHospital() + "就诊。");
+        ((NoticeRecyclerViewHolder) holder).textView_time.setText(noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime());
     }
 
     @Override

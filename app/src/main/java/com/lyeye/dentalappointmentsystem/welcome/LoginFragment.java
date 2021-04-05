@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,29 +21,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobUser;
+import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
+import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
-import com.lyeye.dentalappointmentsystem.util.UserLoginMessageEvent;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 
 public class LoginFragment extends Fragment {
 
     private Button button_signUp;
-    private EditText editText_username, editText_pwd;
+    private EditText editText_userEmail, editText_pwd;
     private TextView textView_signIn;
 
     private RegisterFragment registerFragment;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sp_editor;
+    private UserImpl userImpl;
 
     @Nullable
     @Override
@@ -57,54 +51,43 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         button_signUp = view.findViewById(R.id.btn_fl_signup);
-        editText_username = view.findViewById(R.id.et_fl_username);
+        editText_userEmail = view.findViewById(R.id.et_fl_useremail);
         editText_pwd = view.findViewById(R.id.et_fl_password);
         textView_signIn = view.findViewById(R.id.tv_fl_signin);
-
-        BmobQuery<BmobUser> bmobUserBmobQuery = new BmobQuery<>();
 
 
         button_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
+                userImpl = new UserImpl(welcomeActivity);
                 ToastUtil.showMsg(welcomeActivity, "正在登录...");
-                if (editText_username.getText().toString().length() == 0 || editText_pwd.getText().toString().length() == 0) {
-                    ToastUtil.showMsg(welcomeActivity, "用户名或密码不能为空!");
+                if (editText_userEmail.getText().toString().length() == 0 || editText_pwd.getText().toString().length() == 0) {
+                    ToastUtil.showMsg(welcomeActivity, "用户邮箱或密码不能为空!");
                 } else {
-                    bmobUserBmobQuery.addWhereEqualTo("userName", editText_username.getText().toString());
-                    bmobUserBmobQuery.findObjects(new FindListener<BmobUser>() {
-                        @Override
-                        public void done(List<BmobUser> list, BmobException e) {
-                            if (e == null) {
-                                if (list.isEmpty()) {
-                                    ToastUtil.showMsg(welcomeActivity, "用户名不存在！");
-                                } else {
-                                    BmobUser bmobUser = list.get(0);
-                                    String userPwd = bmobUser.getUserPwd();
-                                    if (!(editText_pwd.getText().toString()).equals(userPwd)) {
-                                        ToastUtil.showMsg(welcomeActivity, "密码错误！");
-                                    } else {
-                                        Intent intent = new Intent(welcomeActivity, MainActivity.class);
-                                        EventBus.getDefault().postSticky(new UserLoginMessageEvent(bmobUser));
-                                        sharedPreferences = welcomeActivity.getSharedPreferences("user_info", Context.MODE_PRIVATE);
-                                        sp_editor = sharedPreferences.edit();
-                                        sp_editor.putString("username", bmobUser.getUserName());
-                                        sp_editor.putString("password", bmobUser.getUserPwd());
-                                        sp_editor.putString("gender", bmobUser.getUserGender());
-                                        sp_editor.putString("affiliatedHospital", bmobUser.getAffiliatedHospital());
-                                        sp_editor.putString("diagnosisNumber", bmobUser.getDiagnosisNumber());
-                                        sp_editor.apply();
-                                        startActivity(intent);
-                                        ToastUtil.showMsg(welcomeActivity, "登录成功");
-                                    }
-                                }
-                            } else {
-                                ToastUtil.showMsg(welcomeActivity, "登录失败" + e.getMessage());
-                            }
-
+                    if (userImpl.findUserByEmail(editText_userEmail.getText().toString()) != null) {
+                        User userByEmail = userImpl.findUserByEmail(editText_userEmail.getText().toString());
+                        if (editText_pwd.getText().toString().equals(userByEmail.getUserPwd())) {
+                            Log.d(null, "loginUser: " + userByEmail.toString());
+                            Intent intent = new Intent(welcomeActivity, MainActivity.class);
+                            sharedPreferences = welcomeActivity.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+                            sp_editor = sharedPreferences.edit();
+                            sp_editor.putString("userEmail", userByEmail.getUserEmail());
+                            sp_editor.putLong("userId", userByEmail.getUserId());
+                            sp_editor.putString("username", userByEmail.getUserName());
+                            sp_editor.putString("password", userByEmail.getUserPwd());
+                            sp_editor.putString("gender", userByEmail.getUserGender());
+                            sp_editor.putString("affiliatedHospital", userByEmail.getAffiliatedHospital());
+                            sp_editor.putString("diagnosisNumber", userByEmail.getDiagnosisNumber());
+                            sp_editor.apply();
+                            startActivity(intent);
+                            ToastUtil.showMsg(welcomeActivity, "登录成功");
+                        } else {
+                            ToastUtil.showMsg(welcomeActivity, "密码错误！");
                         }
-                    });
+                    } else {
+                        ToastUtil.showMsg(welcomeActivity, "邮箱错误！");
+                    }
                 }
             }
         });
@@ -135,7 +118,7 @@ public class LoginFragment extends Fragment {
         */
         Drawable drawable_username = view.getResources().getDrawable(R.mipmap.ic_launcher_user);
         drawable_username.setBounds(0, 0, 100, 105);
-        editText_username.setCompoundDrawables(drawable_username, null, null, null);
+        editText_userEmail.setCompoundDrawables(drawable_username, null, null, null);
 
         Drawable drawable_pwd = view.getResources().getDrawable(R.mipmap.ic_launcher_pwd);
         drawable_pwd.setBounds(0, 0, 100, 105);

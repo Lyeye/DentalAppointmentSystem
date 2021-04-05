@@ -12,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.appointment.XLinearLayoutManager;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
-import com.lyeye.dentalappointmentsystem.entity.BmobUser;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.User;
+import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
 import com.lyeye.dentalappointmentsystem.util.UserLoginMessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,19 +23,17 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-
 public class FamilyAppointmentInfoActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ImageView imageView_noticeInfo;
     private TextView textView_appointment;
 
-    private BmobUser user;
+    private User user;
     private String userName;
-    private List<BmobAppointmentInfo> scheduleList;
+    private long userId;
+    private AppointmentInfoImpl appointmentInfoImpl;
+    private List<AppointmentInfo> scheduleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +43,8 @@ public class FamilyAppointmentInfoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv_fai_appointmentInfo);
         imageView_noticeInfo = findViewById(R.id.iv_fai_noticeInfo);
         textView_appointment = findViewById(R.id.tv_fai_appointment);
+
+        appointmentInfoImpl = new AppointmentInfoImpl(FamilyAppointmentInfoActivity.this);
 
         EventBus.getDefault().register(FamilyAppointmentInfoActivity.this);
 
@@ -55,24 +56,17 @@ public class FamilyAppointmentInfoActivity extends AppCompatActivity {
             }
         });
 
-        BmobQuery<BmobAppointmentInfo> bmobAppointmentInfoBmobQuery = new BmobQuery<>();
-        bmobAppointmentInfoBmobQuery.addWhereEqualTo("userName", userName);
-        bmobAppointmentInfoBmobQuery.findObjects(new FindListener<BmobAppointmentInfo>() {
-            @Override
-            public void done(List<BmobAppointmentInfo> list, BmobException e) {
-                if (list != null){
-                    scheduleList = list;
-                    recyclerView.setLayoutManager(new XLinearLayoutManager(FamilyAppointmentInfoActivity.this, LinearLayoutManager.VERTICAL, false));
-                    MyFamilyAppointmentRecyclerViewAdapter myFamilyAppointmentRecyclerViewAdapter = new MyFamilyAppointmentRecyclerViewAdapter(FamilyAppointmentInfoActivity.this, scheduleList);
-                    recyclerView.setAdapter(myFamilyAppointmentRecyclerViewAdapter);
-                }
-            }
-        });
+        List<AppointmentInfo> appointmentInfosByUserId = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
+        scheduleList = appointmentInfosByUserId;
+        recyclerView.setLayoutManager(new XLinearLayoutManager(FamilyAppointmentInfoActivity.this, LinearLayoutManager.VERTICAL, false));
+        MyFamilyAppointmentRecyclerViewAdapter myFamilyAppointmentRecyclerViewAdapter = new MyFamilyAppointmentRecyclerViewAdapter(FamilyAppointmentInfoActivity.this, scheduleList);
+        recyclerView.setAdapter(myFamilyAppointmentRecyclerViewAdapter);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onUserLoginMessageEvent(UserLoginMessageEvent userLoginMessageEvent) {
         user = userLoginMessageEvent.getUser();
+        userId = user.getUserId();
         userName = user.getUserName();
         textView_appointment.setText(userName + "的预约");
     }

@@ -117,10 +117,14 @@ public class User {
         return "User{" +
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
+                ", userAge=" + userAge +
+                ", userGender='" + userGender + '\'' +
                 ", userPwd='" + userPwd + '\'' +
                 ", userEmail='" + userEmail + '\'' +
                 ", userPhoneNumber='" + userPhoneNumber + '\'' +
                 ", affiliatedHospital='" + affiliatedHospital + '\'' +
+                ", userBirthday=" + userBirthday +
+                ", diagnosisNumber='" + diagnosisNumber + '\'' +
                 '}';
     }
 

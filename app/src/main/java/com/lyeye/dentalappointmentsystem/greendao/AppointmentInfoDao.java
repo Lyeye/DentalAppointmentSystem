@@ -25,9 +25,9 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
      */
     public static class Properties {
         public final static Property AmiId = new Property(0, Long.class, "amiId", true, "_id");
-        public final static Property UserName = new Property(1, String.class, "userName", false, "USER_NAME");
-        public final static Property AmiTime = new Property(2, String.class, "amiTime", false, "APPOINTMENT_INFO_TIME");
-        public final static Property AmiDoctor = new Property(3, String.class, "amiDoctor", false, "APPOINTMENT_INFO_DOCTOR");
+        public final static Property UserId = new Property(1, long.class, "userId", false, "USER_NAME");
+        public final static Property AmiDate = new Property(2, String.class, "amiDate", false, "APPOINTMENT_INFO_DATE");
+        public final static Property AmiTime = new Property(3, String.class, "amiTime", false, "APPOINTMENT_INFO_TIME");
         public final static Property AmiSymptoms = new Property(4, String.class, "amiSymptoms", false, "APPOINTMENT_INFO_SYMPTOMS");
     }
 
@@ -45,9 +45,9 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"APPOINTMENT_INFO\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: amiId
-                "\"USER_NAME\" TEXT NOT NULL ," + // 1: userName
-                "\"APPOINTMENT_INFO_TIME\" TEXT," + // 2: amiTime
-                "\"APPOINTMENT_INFO_DOCTOR\" TEXT," + // 3: amiDoctor
+                "\"USER_NAME\" INTEGER NOT NULL ," + // 1: userId
+                "\"APPOINTMENT_INFO_DATE\" TEXT," + // 2: amiDate
+                "\"APPOINTMENT_INFO_TIME\" TEXT," + // 3: amiTime
                 "\"APPOINTMENT_INFO_SYMPTOMS\" TEXT);"); // 4: amiSymptoms
     }
 
@@ -60,23 +60,23 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, AppointmentInfo entity) {
         stmt.clearBindings();
- 
+
         Long amiId = entity.getAmiId();
         if (amiId != null) {
             stmt.bindLong(1, amiId);
         }
-        stmt.bindString(2, entity.getUserName());
- 
+        stmt.bindLong(2, entity.getUserId());
+
+        String amiDate = entity.getAmiDate();
+        if (amiDate != null) {
+            stmt.bindString(3, amiDate);
+        }
+
         String amiTime = entity.getAmiTime();
         if (amiTime != null) {
-            stmt.bindString(3, amiTime);
+            stmt.bindString(4, amiTime);
         }
- 
-        String amiDoctor = entity.getAmiDoctor();
-        if (amiDoctor != null) {
-            stmt.bindString(4, amiDoctor);
-        }
- 
+
         String amiSymptoms = entity.getAmiSymptoms();
         if (amiSymptoms != null) {
             stmt.bindString(5, amiSymptoms);
@@ -86,23 +86,23 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, AppointmentInfo entity) {
         stmt.clearBindings();
- 
+
         Long amiId = entity.getAmiId();
         if (amiId != null) {
             stmt.bindLong(1, amiId);
         }
-        stmt.bindString(2, entity.getUserName());
- 
+        stmt.bindLong(2, entity.getUserId());
+
+        String amiDate = entity.getAmiDate();
+        if (amiDate != null) {
+            stmt.bindString(3, amiDate);
+        }
+
         String amiTime = entity.getAmiTime();
         if (amiTime != null) {
-            stmt.bindString(3, amiTime);
+            stmt.bindString(4, amiTime);
         }
- 
-        String amiDoctor = entity.getAmiDoctor();
-        if (amiDoctor != null) {
-            stmt.bindString(4, amiDoctor);
-        }
- 
+
         String amiSymptoms = entity.getAmiSymptoms();
         if (amiSymptoms != null) {
             stmt.bindString(5, amiSymptoms);
@@ -117,11 +117,11 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
     @Override
     public AppointmentInfo readEntity(Cursor cursor, int offset) {
         AppointmentInfo entity = new AppointmentInfo( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // amiId
-            cursor.getString(offset + 1), // userName
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // amiTime
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // amiDoctor
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // amiSymptoms
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // amiId
+                cursor.getLong(offset + 1), // userId
+                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // amiDate
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // amiTime
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // amiSymptoms
         );
         return entity;
     }
@@ -129,11 +129,11 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
     @Override
     public void readEntity(Cursor cursor, AppointmentInfo entity, int offset) {
         entity.setAmiId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setUserName(cursor.getString(offset + 1));
-        entity.setAmiTime(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setAmiDoctor(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setUserId(cursor.getLong(offset + 1));
+        entity.setAmiDate(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setAmiTime(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setAmiSymptoms(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-     }
+    }
     
     @Override
     protected final Long updateKeyAfterInsert(AppointmentInfo entity, long rowId) {

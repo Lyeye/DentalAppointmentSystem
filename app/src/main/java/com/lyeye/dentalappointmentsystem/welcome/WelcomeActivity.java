@@ -29,7 +29,6 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        Bmob.initialize(this, "0d7ffa7b53c0d9e51d06084302c5368c");
         start();
     }
 

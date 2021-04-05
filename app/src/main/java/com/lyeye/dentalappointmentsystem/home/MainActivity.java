@@ -33,8 +33,10 @@ import com.bumptech.glide.Glide;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.appointment.AppointmentActivity;
 import com.lyeye.dentalappointmentsystem.camera.CameraActivity;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.family.MyFamilyActivity;
+import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
+import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
 import com.lyeye.dentalappointmentsystem.notice.NoticeActivity;
 import com.lyeye.dentalappointmentsystem.scan.ScanActivity;
 import com.lyeye.dentalappointmentsystem.remote.JoinRoomActivity;
@@ -49,10 +51,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -61,11 +60,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button button_register, button_appointment, button_myfamily, button_notice, button_camera, button_remote;
     private TextView textView_username, textView_gender, textView_affiliatedHospital, textView_diagnosisNumber;
     private RecyclerView recyclerView_appointmentInfo;
-    private ImageView imageView_reflesh, imageView_userPhoto;
+    private ImageView imageView_userPhoto;
     private String paths;
     private SharedPreferences sharedPreferences;
     private String userName;
-    private List<BmobAppointmentInfo> appointmentInfos;
+    private long userId;
+    private AppointmentInfoImpl appointmentInfoImpl;
+    private List<AppointmentInfo> appointmentInfos;
     private boolean isLogin;
     private boolean isExit;
     private String[] permissions;
@@ -102,11 +103,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView_affiliatedHospital = findViewById(R.id.tv_main_affiliatedHospital);
         textView_diagnosisNumber = findViewById(R.id.tv_main_diagnosisNumber);
         recyclerView_appointmentInfo = findViewById(R.id.rv_main_appointmentInfo);
-        imageView_reflesh = findViewById(R.id.iv_main_reflesh);
         imageView_userPhoto = findViewById(R.id.iv_main_userPhoto);
 
+        appointmentInfoImpl = new AppointmentInfoImpl(MainActivity.this);
         sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
         userName = sharedPreferences.getString("username", "登录/注册");
+        userId = sharedPreferences.getLong("userId", 999999999);
         textView_username.setText(userName);
         textView_gender.setText(sharedPreferences.getString("gender", ""));
         textView_affiliatedHospital.setText(sharedPreferences.getString("affiliatedHospital", ""));
@@ -117,37 +119,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             isLogin = true;
         }
 
-        BmobQuery<BmobAppointmentInfo> bmobAppointmentInfoBmobQuery = new BmobQuery<>();
-        bmobAppointmentInfoBmobQuery.addWhereEqualTo("userName", userName);
-        bmobAppointmentInfoBmobQuery.findObjects(new FindListener<BmobAppointmentInfo>() {
-            @Override
-            public void done(List<BmobAppointmentInfo> list, BmobException e) {
-                appointmentInfos = list;
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
-                linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
-                recyclerView_appointmentInfo.setLayoutManager(linearLayoutManager);
-                recyclerView_appointmentInfo.setAdapter(new AppointmentInfoRecyclerViewAdapter(MainActivity.this, appointmentInfos));
-            }
-        });
-    }
-
-    private void reflesh() {
-        BmobQuery<BmobAppointmentInfo> bmobAppointmentInfoBmobQuery = new BmobQuery<>();
-        bmobAppointmentInfoBmobQuery.addWhereEqualTo("userName", userName);
-        bmobAppointmentInfoBmobQuery.findObjects(new FindListener<BmobAppointmentInfo>() {
-            @Override
-            public void done(List<BmobAppointmentInfo> list, BmobException e) {
-                ToastUtil.showMsg(MainActivity.this, "正在刷新...");
-                if (list != null) {
-                    appointmentInfos = list;
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
-                    linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
-                    recyclerView_appointmentInfo.setLayoutManager(linearLayoutManager);
-                    recyclerView_appointmentInfo.setAdapter(new AppointmentInfoRecyclerViewAdapter(MainActivity.this, appointmentInfos));
-                    ToastUtil.showMsg(MainActivity.this, "刷新成功");
-                }
-            }
-        });
+        List<AppointmentInfo> appointmentInfosByUserId = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
+        appointmentInfos = appointmentInfosByUserId;
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        recyclerView_appointmentInfo.setLayoutManager(linearLayoutManager);
+        recyclerView_appointmentInfo.setAdapter(new AppointmentInfoRecyclerViewAdapter(MainActivity.this, appointmentInfos));
     }
 
     @Override
@@ -171,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }.sendEmptyMessageDelayed(0, 2000);
         } else {
+            DaoManager.getInstance().closeConnection();
             finishAffinity();
             ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
             activityManager.killBackgroundProcesses(this.getPackageName());
@@ -197,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_notice.setOnClickListener(this);
         button_camera.setOnClickListener(this);
         button_remote.setOnClickListener(this);
-        imageView_reflesh.setOnClickListener(this);
         imageView_userPhoto.setOnClickListener(this);
     }
 
@@ -225,9 +202,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_main_username:
                 intent = new Intent(MainActivity.this, WelcomeActivity.class);
                 startActivity(intent);
-                break;
-            case R.id.iv_main_reflesh:
-                reflesh();
                 break;
             case R.id.btn_main_register:
                 if (isLogin) {

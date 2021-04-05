@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
 public class AppointmentInfoRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     private Context context;
-    private List<BmobAppointmentInfo> appointmentInfos;
+    private List<AppointmentInfo> appointmentInfos;
 
-    public AppointmentInfoRecyclerViewAdapter(Context context, List<BmobAppointmentInfo> appointmentInfos) {
+    public AppointmentInfoRecyclerViewAdapter(Context context, List<AppointmentInfo> appointmentInfos) {
         this.context = context;
         this.appointmentInfos = appointmentInfos;
     }

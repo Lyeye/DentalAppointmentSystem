@@ -23,19 +23,13 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobUser;
-import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
+import com.lyeye.dentalappointmentsystem.entity.User;
+import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
 
 public class RegisterFragment extends Fragment {
 
@@ -47,7 +41,7 @@ public class RegisterFragment extends Fragment {
     private TextView textView_select, textView_birthday;
 
     private LoginFragment loginFragment;
-    private DaoManager daoManager;
+    private UserImpl userImpl;
     private String gender;
     private Date birthday;
 
@@ -65,6 +59,7 @@ public class RegisterFragment extends Fragment {
 
 
         final WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
+        userImpl = new UserImpl(welcomeActivity);
 
         final Calendar startCalendar = Calendar.getInstance();
         startCalendar.set(1950, 0, 1);
@@ -117,20 +112,19 @@ public class RegisterFragment extends Fragment {
         button_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BmobUser bmobUser = new BmobUser();
                 String diagnosisNumber = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
-                bmobUser.setUserPhoneNumber(editText_phone.getText().toString());
-                bmobUser.setUserEmail(editText_email.getText().toString());
-                bmobUser.setUserName(editText_username.getText().toString());
-                bmobUser.setUserPwd(editText_pwd.getText().toString());
-                bmobUser.setUserGender(gender);
-                bmobUser.setUserBirthday(birthday);
-                bmobUser.setAffiliatedHospital(spinner_hospital.getSelectedItem().toString());
-                bmobUser.setDiagnosisNumber(diagnosisNumber);
-//                bmobUser.setUserPic(new BmobFile(new File("/data/data/com.lyeye.dentalappointmentsystem/files/userPic.png")));
+                User user = new User();
+                user.setUserPhoneNumber(editText_phone.getText().toString());
+                user.setUserEmail(editText_email.getText().toString());
+                user.setUserName(editText_username.getText().toString());
+                user.setUserPwd(editText_pwd.getText().toString());
+                user.setUserGender(gender);
+                user.setUserBirthday(birthday);
+                user.setAffiliatedHospital(spinner_hospital.getSelectedItem().toString());
+                user.setDiagnosisNumber(diagnosisNumber);
+
                 boolean isEmail = isEmail(editText_email.getText().toString());
                 boolean isMobile = isMobile(editText_phone.getText().toString());
-
 
                 if (editText_email != null
                         && editText_phone != null
@@ -140,48 +134,20 @@ public class RegisterFragment extends Fragment {
                         && editText_pwd != null
                         && editText_confirmpwd != null
                         && (editText_confirmpwd.getText().toString()).equals(editText_pwd.getText().toString())) {
-                    BmobQuery<BmobUser> userEmailBmobQuery = new BmobQuery<>();
-                    userEmailBmobQuery.addWhereEqualTo("userEmail", editText_email.getText().toString());
-                    userEmailBmobQuery.findObjects(new FindListener<BmobUser>() {
-                        @Override
-                        public void done(List<BmobUser> list, BmobException e) {
-                            if (list.isEmpty()) {
-                                BmobQuery<BmobUser> usernameBmobQuery = new BmobQuery<>();
-                                usernameBmobQuery.addWhereEqualTo("userName", editText_username.getText().toString());
-                                usernameBmobQuery.findObjects(new FindListener<BmobUser>() {
-                                    @Override
-                                    public void done(List<BmobUser> list, BmobException e) {
-                                        if (list.isEmpty()) {
-                                            bmobUser.save(new SaveListener<String>() {
-                                                @Override
-                                                public void done(String s, BmobException e) {
-                                                    ToastUtil.showMsg(welcomeActivity, "正在注册...");
-                                                    if (e == null) {
-                                                        LoginFragment loginFragment = new LoginFragment();
-                                                        FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
-                                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                                        fragmentTransaction
-                                                                .addToBackStack(null)
-                                                                .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
-                                                                .replace(R.id.fl_swl_container, loginFragment)
-                                                                .commitAllowingStateLoss();
-                                                        ToastUtil.showMsg(welcomeActivity, "注册成功！");
-                                                    } else {
-                                                        ToastUtil.showMsg(welcomeActivity, "注册失败！");
-                                                        Log.d(null, "done: " + e.toString());
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            ToastUtil.showMsg(welcomeActivity, "用户名已存在！");
-                                        }
-                                    }
-                                });
-                            } else {
-                                ToastUtil.showMsg(welcomeActivity, "邮箱已存在！");
-                            }
-                        }
-                    });
+                    if (userImpl.findUserByEmail(editText_email.getText().toString()) == null) {
+                        userImpl.insertUser(user);
+                        Log.d(null, "userInfo: " + user.toString());
+                        loginFragment = new LoginFragment();
+                        FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
+                                .replace(R.id.fl_swl_container, loginFragment)
+                                .commitAllowingStateLoss();
+                    } else {
+                        ToastUtil.showMsg(welcomeActivity, "邮箱已存在！");
+                    }
                 } else if (editText_email.getText().length() == 0) {
                     ToastUtil.showMsg(welcomeActivity, "邮箱不能为空！");
                 } else if (isEmail == false) {

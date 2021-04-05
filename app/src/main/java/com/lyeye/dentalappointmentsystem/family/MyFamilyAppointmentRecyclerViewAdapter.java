@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
 public class MyFamilyAppointmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private List<BmobAppointmentInfo> scheduleList;
+    private List<AppointmentInfo> scheduleList;
 
 
-    public MyFamilyAppointmentRecyclerViewAdapter(Context context, List<BmobAppointmentInfo> scheduleList) {
+    public MyFamilyAppointmentRecyclerViewAdapter(Context context, List<AppointmentInfo> scheduleList) {
         this.context = context;
         this.scheduleList = scheduleList;
     }

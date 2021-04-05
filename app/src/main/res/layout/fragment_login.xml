@@ -34,12 +34,12 @@
                 app:civ_border_width="2dp" />
 
             <EditText
-                android:id="@+id/et_fl_username"
+                android:id="@+id/et_fl_useremail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:drawableLeft="@mipmap/ic_launcher_user"
-                android:hint="请输入用户名" />
+                android:hint="请输入用户邮箱" />
 
             <EditText
                 android:id="@+id/et_fl_password"

@@ -14,7 +14,8 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobUser;
+import com.lyeye.dentalappointmentsystem.entity.User;
+import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UserLoginMessageEvent;
 
@@ -23,11 +24,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 public class MyFamilyActivity extends AppCompatActivity {
 
@@ -36,6 +32,7 @@ public class MyFamilyActivity extends AppCompatActivity {
     private Button button_familyLogin;
 
     private Date select_birthday;
+    private UserImpl userImpl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +43,7 @@ public class MyFamilyActivity extends AppCompatActivity {
         textView_familyBirthday = findViewById(R.id.tv_mf_familyBirthday);
         button_familyLogin = findViewById(R.id.btn_mf_familyLogin);
 
+        userImpl = new UserImpl(MyFamilyActivity.this);
 
         final Calendar startCalendar = Calendar.getInstance();
         startCalendar.set(1950, 0, 1);
@@ -74,27 +72,21 @@ public class MyFamilyActivity extends AppCompatActivity {
                 if (editText_diagnosisNumber.getText().toString().length() == 0 || textView_familyBirthday.getText().toString() == "选择亲属生日") {
                     ToastUtil.showMsg(MyFamilyActivity.this, "请输入亲属诊察号以及选择亲属生日!");
                 } else {
-                    BmobQuery<BmobUser> bmobUserBmobQuery = new BmobQuery<>();
-                    bmobUserBmobQuery.addWhereEqualTo("diagnosisNumber", editText_diagnosisNumber.getText().toString());
-                    bmobUserBmobQuery.findObjects(new FindListener<BmobUser>() {
-                        @Override
-                        public void done(List<BmobUser> list, BmobException e) {
-                            if (list == null) {
-                                ToastUtil.showMsg(MyFamilyActivity.this, "亲属诊察号错误!");
-                            } else {
-                                String date1 = select_birthday.getYear() + "年" + select_birthday.getMonth() + "月" + select_birthday.getDate() + "日";
-                                Date userBirthday = list.get(0).getUserBirthday();
-                                String date2 = userBirthday.getYear() + "年" + userBirthday.getMonth() + "月" + userBirthday.getDate() + "日";
-                                if (date1.equals(date2)) {
-                                    EventBus.getDefault().postSticky(new UserLoginMessageEvent(list.get(0)));
-                                    Intent intent = new Intent(MyFamilyActivity.this, FamilyAppointmentInfoActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    ToastUtil.showMsg(MyFamilyActivity.this, "生日错误!");
-                                }
-                            }
+                    if (userImpl.findUserByDiagnosisNumber(editText_diagnosisNumber.getText().toString()) != null) {
+                        User userByDiagnosisNumber = userImpl.findUserByDiagnosisNumber(editText_diagnosisNumber.getText().toString());
+                        String date1 = select_birthday.getYear() + "年" + select_birthday.getMonth() + "月" + select_birthday.getDate() + "日";
+                        Date userBirthday = userByDiagnosisNumber.getUserBirthday();
+                        String date2 = userBirthday.getYear() + "年" + userBirthday.getMonth() + "月" + userBirthday.getDate() + "日";
+                        if (date1.equals(date2)) {
+                            EventBus.getDefault().postSticky(new UserLoginMessageEvent(userByDiagnosisNumber));
+                            Intent intent = new Intent(MyFamilyActivity.this, FamilyAppointmentInfoActivity.class);
+                            startActivity(intent);
+                        } else {
+                            ToastUtil.showMsg(MyFamilyActivity.this, "生日错误!");
                         }
-                    });
+                    } else {
+                        ToastUtil.showMsg(MyFamilyActivity.this, "亲属诊察号错误!");
+                    }
                 }
             }
         });

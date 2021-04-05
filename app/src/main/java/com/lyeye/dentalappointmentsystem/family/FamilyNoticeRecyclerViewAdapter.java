@@ -9,7 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.User;
+import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
 
 import java.util.List;
 
@@ -19,10 +21,11 @@ import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
 public class FamilyNoticeRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     private Context context;
-    private List<BmobAppointmentInfo> noticeList;
+    private List<AppointmentInfo> noticeList;
+    private UserImpl userImpl;
 
 
-    public FamilyNoticeRecyclerViewAdapter(Context context, List<BmobAppointmentInfo> noticeList) {
+    public FamilyNoticeRecyclerViewAdapter(Context context, List<AppointmentInfo> noticeList) {
         this.context = context;
         this.noticeList = noticeList;
     }
@@ -36,7 +39,9 @@ public class FamilyNoticeRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ((NoticeRecyclerViewHolder) holder).textView_notice.setText("       尊敬的" + noticeList.get(position).getUserName() + "先生/女士，请于" + noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime() + "前往所在医院就诊。");
+        userImpl = new UserImpl(context);
+        User userById = userImpl.findUserById(noticeList.get(position).getUserId());
+        ((NoticeRecyclerViewHolder) holder).textView_notice.setText("       尊敬的" + userById.getUserName() + "先生/女士，请于" + noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime() + "前往" + userById.getAffiliatedHospital() + "就诊。");
     }
 
     @Override

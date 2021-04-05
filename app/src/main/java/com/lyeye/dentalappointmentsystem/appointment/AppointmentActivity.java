@@ -15,14 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 public class AppointmentActivity extends AppCompatActivity {
 
@@ -30,9 +27,10 @@ public class AppointmentActivity extends AppCompatActivity {
     private TextView textView_flush;
     private ImageView imageView_appointment;
 
-    private List<BmobAppointmentInfo> appointmentScheduleList = new ArrayList<BmobAppointmentInfo>();
-    private String userName;
+    private List<AppointmentInfo> appointmentScheduleList = new ArrayList<AppointmentInfo>();
     private SharedPreferences sharedPreferences;
+    private long userId;
+    private AppointmentInfoImpl appointmentInfoImpl;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -67,24 +65,19 @@ public class AppointmentActivity extends AppCompatActivity {
         textView_flush = findViewById(R.id.tv_am_reflesh);
         imageView_appointment = findViewById(R.id.iv_am_add);
 
+        appointmentInfoImpl = new AppointmentInfoImpl(AppointmentActivity.this);
 
         sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
-        userName = sharedPreferences.getString("username", "");
+        userId = sharedPreferences.getLong("userId", 99999999);
     }
 
     private void initRecyclerView() {
-        BmobQuery<BmobAppointmentInfo> bmobAppointmentInfoBmobQuery = new BmobQuery<>();
-        bmobAppointmentInfoBmobQuery.addWhereEqualTo("userName", userName);
-        bmobAppointmentInfoBmobQuery.findObjects(new FindListener<BmobAppointmentInfo>() {
-            @Override
-            public void done(List<BmobAppointmentInfo> list, BmobException e) {
-                appointmentScheduleList = list;
-                recyclerView.setLayoutManager(new XLinearLayoutManager(AppointmentActivity.this, LinearLayoutManager.VERTICAL, false));
-                final AppointmentRecyclerViewAdapter appointmentRecyclerViewAdapter
-                        = new AppointmentRecyclerViewAdapter(AppointmentActivity.this, appointmentScheduleList);
-                appointmentRecyclerViewAdapter.setList(appointmentScheduleList);
-                recyclerView.setAdapter(appointmentRecyclerViewAdapter);
-            }
-        });
+        List<AppointmentInfo> appointmentInfos = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
+        appointmentScheduleList = appointmentInfos;
+        recyclerView.setLayoutManager(new XLinearLayoutManager(AppointmentActivity.this, LinearLayoutManager.VERTICAL, false));
+        final AppointmentRecyclerViewAdapter appointmentRecyclerViewAdapter
+                = new AppointmentRecyclerViewAdapter(AppointmentActivity.this, appointmentScheduleList);
+        appointmentRecyclerViewAdapter.setList(appointmentScheduleList);
+        recyclerView.setAdapter(appointmentRecyclerViewAdapter);
     }
 }

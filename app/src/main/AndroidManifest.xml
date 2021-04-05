@@ -39,8 +39,6 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
         <activity android:name=".scan.RegistrationResultActivity"></activity>
-        <activity android:name=".appointment.TimeTableActivity">
-        </activity>
         <activity android:name=".remote.JoinRoomActivity" />
         <activity android:name=".remote.CreateOrJoinARoomActivity" />
         <activity android:name=".appointment.TimeAppointmentActivity" />

@@ -132,13 +132,6 @@
                 android:text="预约信息"
                 android:textColor="#121212"
                 android:textSize="20dp" />
-
-            <ImageView
-                android:id="@+id/iv_main_reflesh"
-                android:layout_width="28dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="220dp"
-                android:background="@drawable/bg_flush_progress" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

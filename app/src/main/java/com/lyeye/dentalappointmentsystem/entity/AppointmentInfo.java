@@ -14,13 +14,13 @@ public class AppointmentInfo {
 
     @Property(nameInDb = "USER_NAME")
     @NotNull
-    private String userName;
+    private long userId;
+
+    @Property(nameInDb = "APPOINTMENT_INFO_DATE")
+    private String amiDate;
 
     @Property(nameInDb = "APPOINTMENT_INFO_TIME")
     private String amiTime;
-
-    @Property(nameInDb = "APPOINTMENT_INFO_DOCTOR")
-    private String amiDoctor;
 
     @Property(nameInDb = "APPOINTMENT_INFO_SYMPTOMS")
     private String amiSymptoms;
@@ -30,13 +30,13 @@ public class AppointmentInfo {
     public AppointmentInfo() {
     }
 
-    @Generated(hash = 1187571826)
-    public AppointmentInfo(Long amiId, @NotNull String userName, String amiTime,
-                           String amiDoctor, String amiSymptoms) {
+    @Generated(hash = 1337533426)
+    public AppointmentInfo(Long amiId, long userId, String amiDate, String amiTime,
+                           String amiSymptoms) {
         this.amiId = amiId;
-        this.userName = userName;
+        this.userId = userId;
+        this.amiDate = amiDate;
         this.amiTime = amiTime;
-        this.amiDoctor = amiDoctor;
         this.amiSymptoms = amiSymptoms;
     }
 
@@ -48,12 +48,12 @@ public class AppointmentInfo {
         this.amiId = amiId;
     }
 
-    public String getUserName() {
-        return this.userName;
+    public long getUserId() {
+        return this.userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getAmiTime() {
@@ -72,12 +72,24 @@ public class AppointmentInfo {
         this.amiSymptoms = amiSymptoms;
     }
 
-    public String getAmiDoctor() {
-        return this.amiDoctor;
+
+    public String getAmiDate() {
+        return this.amiDate;
     }
 
-    public void setAmiDoctor(String amiDoctor) {
-        this.amiDoctor = amiDoctor;
+
+    public void setAmiDate(String amiDate) {
+        this.amiDate = amiDate;
     }
 
+    @Override
+    public String toString() {
+        return "AppointmentInfo{" +
+                "amiId=" + amiId +
+                ", userId=" + userId +
+                ", amiDate='" + amiDate + '\'' +
+                ", amiTime='" + amiTime + '\'' +
+                ", amiSymptoms='" + amiSymptoms + '\'' +
+                '}';
+    }
 }

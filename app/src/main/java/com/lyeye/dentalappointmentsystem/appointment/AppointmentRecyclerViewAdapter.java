@@ -1,7 +1,6 @@
 package com.lyeye.dentalappointmentsystem.appointment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,31 +12,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.BmobAppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
 
 
 public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private List<BmobAppointmentInfo> scheduleList;
+    private List<AppointmentInfo> scheduleList;
+    private AppointmentInfoImpl appointmentInfoIpml;
 
 
-    public AppointmentRecyclerViewAdapter(Context context, List<BmobAppointmentInfo> list) {
+    public AppointmentRecyclerViewAdapter(Context context, List<AppointmentInfo> list) {
         this.context = context;
         this.scheduleList = list;
     }
 
-    public void setList(List<BmobAppointmentInfo> list) {
+    public void setList(List<AppointmentInfo> list) {
         this.scheduleList = list;
     }
 
@@ -67,8 +63,9 @@ public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<Recycle
 
         ((AmRecyclerViewHolder) holder).textView_am_symptoms.setText(scheduleList.get(position).getAmiSymptoms());
 
-        String sdate = scheduleList.get(position).getAmiDate();
-        String stime = scheduleList.get(position).getAmiTime();
+        String amiDate = scheduleList.get(position).getAmiDate();
+        String amiTime = scheduleList.get(position).getAmiTime();
+        appointmentInfoIpml = new AppointmentInfoImpl(context);
         /*设置侧滑显示模式*/
         ((AmRecyclerViewHolder) holder).swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         ((AmRecyclerViewHolder) holder).textView_am_delete.setOnClickListener(new View.OnClickListener() {
@@ -77,30 +74,18 @@ public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<Recycle
                 SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
                 sweetAlertDialog.setTitleText("亲(づ￣3￣)づ╭❤～");
 
-                sweetAlertDialog.setContentText("确定取消预约" + sdate + " " + stime +  "吗");
+                sweetAlertDialog.setContentText("确定取消预约" + amiDate + " " + amiTime + "吗");
                 sweetAlertDialog.setConfirmText("确定");
                 sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        BmobQuery<BmobAppointmentInfo> bmobAppointmentInfoBmobQuery = new BmobQuery<>();
-                        bmobAppointmentInfoBmobQuery
-                                .addWhereEqualTo("amiDate", sdate)
-                                .addWhereEqualTo("amiTime", stime);
-                        bmobAppointmentInfoBmobQuery.findObjects(new FindListener<BmobAppointmentInfo>() {
-                            @Override
-                            public void done(List<BmobAppointmentInfo> list, BmobException e) {
-                                list.get(0).delete(new UpdateListener() {
-                                    @Override
-                                    public void done(BmobException e) {
-                                        scheduleList.remove(position);
-                                        notifyItemRemoved(position);
-                                        notifyItemRangeChanged(0, scheduleList.size());
-                                        notifyDataSetChanged();
-                                        ToastUtil.showMsg(context, "已取消" + sdate + " " + stime + "的预约");
-                                    }
-                                });
-                            }
-                        });
+                        AppointmentInfo appointmentInfo = appointmentInfoIpml.findAppointmentInfo(scheduleList.get(position).getAmiId());
+                        appointmentInfoIpml.deleteAppointmentInfo(appointmentInfo);
+                        scheduleList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(0, scheduleList.size());
+                        notifyDataSetChanged();
+                        ToastUtil.showMsg(context, "已取消" + amiDate + " " + amiTime + "的预约");
                         sweetAlertDialog.cancel();
                     }
                 });

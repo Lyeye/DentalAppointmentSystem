@@ -1,20 +1,20 @@
 package com.lyeye.dentalappointmentsystem.util;
 
-import com.lyeye.dentalappointmentsystem.entity.BmobUser;
+import com.lyeye.dentalappointmentsystem.entity.User;
 
 public class UserLoginMessageEvent {
 
-    private com.lyeye.dentalappointmentsystem.entity.BmobUser user;
+    private User user;
 
-    public UserLoginMessageEvent(BmobUser user) {
+    public UserLoginMessageEvent(User user) {
         this.user = user;
     }
 
-    public BmobUser getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(BmobUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }
