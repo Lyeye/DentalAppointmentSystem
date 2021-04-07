@@ -24,11 +24,13 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property AmiId = new Property(0, Long.class, "amiId", true, "_id");
+        public final static Property AmiId = new Property(0, Long.class, "amiId", true, "APPOINTMENT_INFO_ID");
         public final static Property UserId = new Property(1, long.class, "userId", false, "USER_NAME");
-        public final static Property AmiDate = new Property(2, String.class, "amiDate", false, "APPOINTMENT_INFO_DATE");
-        public final static Property AmiTime = new Property(3, String.class, "amiTime", false, "APPOINTMENT_INFO_TIME");
-        public final static Property AmiSymptoms = new Property(4, String.class, "amiSymptoms", false, "APPOINTMENT_INFO_SYMPTOMS");
+        public final static Property AffiliatedHospital = new Property(2, String.class, "affiliatedHospital", false, "AFFLILIATED_HOSPITAL");
+        public final static Property AmiDate = new Property(3, String.class, "amiDate", false, "APPOINTMENT_INFO_DATE");
+        public final static Property AmiTime = new Property(4, String.class, "amiTime", false, "APPOINTMENT_INFO_TIME");
+        public final static Property AmiSymptoms = new Property(5, String.class, "amiSymptoms", false, "APPOINTMENT_INFO_SYMPTOMS");
+        public final static Property CreateAt = new Property(6, java.util.Date.class, "createAt", false, "CREATE_AT");
     }
 
 
@@ -44,11 +46,13 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"APPOINTMENT_INFO\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: amiId
+                "\"APPOINTMENT_INFO_ID\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: amiId
                 "\"USER_NAME\" INTEGER NOT NULL ," + // 1: userId
-                "\"APPOINTMENT_INFO_DATE\" TEXT," + // 2: amiDate
-                "\"APPOINTMENT_INFO_TIME\" TEXT," + // 3: amiTime
-                "\"APPOINTMENT_INFO_SYMPTOMS\" TEXT);"); // 4: amiSymptoms
+                "\"AFFLILIATED_HOSPITAL\" TEXT," + // 2: affiliatedHospital
+                "\"APPOINTMENT_INFO_DATE\" TEXT," + // 3: amiDate
+                "\"APPOINTMENT_INFO_TIME\" TEXT," + // 4: amiTime
+                "\"APPOINTMENT_INFO_SYMPTOMS\" TEXT," + // 5: amiSymptoms
+                "\"CREATE_AT\" INTEGER);"); // 6: createAt
     }
 
     /** Drops the underlying database table. */
@@ -67,19 +71,29 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
         }
         stmt.bindLong(2, entity.getUserId());
 
+        String affiliatedHospital = entity.getAffiliatedHospital();
+        if (affiliatedHospital != null) {
+            stmt.bindString(3, affiliatedHospital);
+        }
+
         String amiDate = entity.getAmiDate();
         if (amiDate != null) {
-            stmt.bindString(3, amiDate);
+            stmt.bindString(4, amiDate);
         }
 
         String amiTime = entity.getAmiTime();
         if (amiTime != null) {
-            stmt.bindString(4, amiTime);
+            stmt.bindString(5, amiTime);
         }
 
         String amiSymptoms = entity.getAmiSymptoms();
         if (amiSymptoms != null) {
-            stmt.bindString(5, amiSymptoms);
+            stmt.bindString(6, amiSymptoms);
+        }
+
+        java.util.Date createAt = entity.getCreateAt();
+        if (createAt != null) {
+            stmt.bindLong(7, createAt.getTime());
         }
     }
 
@@ -93,19 +107,29 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
         }
         stmt.bindLong(2, entity.getUserId());
 
+        String affiliatedHospital = entity.getAffiliatedHospital();
+        if (affiliatedHospital != null) {
+            stmt.bindString(3, affiliatedHospital);
+        }
+
         String amiDate = entity.getAmiDate();
         if (amiDate != null) {
-            stmt.bindString(3, amiDate);
+            stmt.bindString(4, amiDate);
         }
 
         String amiTime = entity.getAmiTime();
         if (amiTime != null) {
-            stmt.bindString(4, amiTime);
+            stmt.bindString(5, amiTime);
         }
 
         String amiSymptoms = entity.getAmiSymptoms();
         if (amiSymptoms != null) {
-            stmt.bindString(5, amiSymptoms);
+            stmt.bindString(6, amiSymptoms);
+        }
+
+        java.util.Date createAt = entity.getCreateAt();
+        if (createAt != null) {
+            stmt.bindLong(7, createAt.getTime());
         }
     }
 
@@ -119,9 +143,11 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
         AppointmentInfo entity = new AppointmentInfo( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // amiId
                 cursor.getLong(offset + 1), // userId
-                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // amiDate
-                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // amiTime
-                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // amiSymptoms
+                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // affiliatedHospital
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // amiDate
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // amiTime
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // amiSymptoms
+                cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)) // createAt
         );
         return entity;
     }
@@ -130,9 +156,11 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
     public void readEntity(Cursor cursor, AppointmentInfo entity, int offset) {
         entity.setAmiId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setUserId(cursor.getLong(offset + 1));
-        entity.setAmiDate(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setAmiTime(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setAmiSymptoms(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setAffiliatedHospital(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setAmiDate(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setAmiTime(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setAmiSymptoms(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setCreateAt(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
     }
     
     @Override

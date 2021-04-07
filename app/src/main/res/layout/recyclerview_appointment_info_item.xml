@@ -18,14 +18,34 @@
             android:orientation="vertical"
             android:gravity="center"
             android:layout_gravity="center">
-            <TextView
-                android:id="@+id/tv_appointmentItem_date"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="@color/blue"
-                android:textSize="20dp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_appointmentItem_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/blue"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/tv_appointmentItem_hospital"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/pink"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/tv_appointmentItem_time"

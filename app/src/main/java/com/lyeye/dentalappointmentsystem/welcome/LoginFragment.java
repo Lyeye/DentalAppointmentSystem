@@ -80,6 +80,7 @@ public class LoginFragment extends Fragment {
                             sp_editor.putString("affiliatedHospital", userByEmail.getAffiliatedHospital());
                             sp_editor.putString("diagnosisNumber", userByEmail.getDiagnosisNumber());
                             sp_editor.apply();
+                            Log.d(null, "loginUser affiliatedHospital: " + sharedPreferences.getString("affiliatedHospital", ""));
                             startActivity(intent);
                             ToastUtil.showMsg(welcomeActivity, "登录成功");
                         } else {

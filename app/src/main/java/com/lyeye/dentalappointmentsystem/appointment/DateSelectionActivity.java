@@ -1,6 +1,7 @@
 package com.lyeye.dentalappointmentsystem.appointment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -14,7 +15,6 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
-import com.lyeye.dentalappointmentsystem.util.TimeSelectDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,10 +30,12 @@ public class DateSelectionActivity extends AppCompatActivity {
     private TextView textView_month, textView_year;
     private CalendarView calendarView_calendar;
 
-    private String symptom;
     private List<String> hasAppointmentTimes = new ArrayList<>();
     private List<Calendar> calendars = new ArrayList<>();
+    private SharedPreferences sharedPreferences;
     private AppointmentInfoImpl appointmentInfoImpl;
+    private String symptom;
+    private String affiliatedHospital;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class DateSelectionActivity extends AppCompatActivity {
             @Override
             public void onDateLongClick(Calendar calendar) {
                 String dateSelected = calendar.getYear() + "-" + calendar.getMonth() + "-" + calendar.getDay();
-                List<AppointmentInfo> list = appointmentInfoImpl.findAppointmentInfoByAmiDate(dateSelected);
+                List<AppointmentInfo> list = appointmentInfoImpl.findAppointmentInfoByAmiDateAndAffiliatedHospital(dateSelected, affiliatedHospital);
                 if (list.isEmpty()) {
                     TimeSelectDialog timeSelectDialog = new TimeSelectDialog(DateSelectionActivity.this, R.style.Dialog, dateSelected, symptom, hasAppointmentTimes);
                     timeSelectDialog.show();
@@ -99,6 +101,9 @@ public class DateSelectionActivity extends AppCompatActivity {
         textView_year.setText(calendarView_calendar.getCurYear() + "年");
         textView_month.setText(calendarView_calendar.getCurMonth() + "月");
 
+        sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        affiliatedHospital = sharedPreferences.getString("affiliatedHospital", "");
+
         Intent intent = getIntent();
         symptom = intent.getStringExtra("symptom");
 
@@ -107,7 +112,7 @@ public class DateSelectionActivity extends AppCompatActivity {
 
         appointmentInfoImpl = new AppointmentInfoImpl(DateSelectionActivity.this);
 
-        List<AppointmentInfo> appointmentInfoList = appointmentInfoImpl.findAll();
+        List<AppointmentInfo> appointmentInfoList = appointmentInfoImpl.findAllInAffiliatedHospital(affiliatedHospital);
         Log.d(null, "listSize: " + appointmentInfoList.size());
         ArrayList<String> dateList = new ArrayList<>();
         for (int i = 0; i < appointmentInfoList.size(); i++) {
@@ -125,7 +130,7 @@ public class DateSelectionActivity extends AppCompatActivity {
         while (iter.hasNext()) {
             String date = iter.next();
             Log.d(null, "map: " + date + "-" + map.get(date));
-            if (map.get(date) >= 8) {
+            if (map.get(date) >= 16) {
                 String[] dateStrings = date.split("-");
                 Calendar calendar = new Calendar();
                 calendar.setYear(Integer.parseInt(dateStrings[0]));

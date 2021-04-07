@@ -17,6 +17,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobTableSchema;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
+import okhttp3.OkHttpClient;
 
 public class WelcomeActivity extends AppCompatActivity {
 

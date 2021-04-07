@@ -9,9 +9,9 @@ public interface AppointmentInfoMapper {
 
     AppointmentInfo findAppointmentInfo(long aimId);
 
-    List<AppointmentInfo> findAll();
+    List<AppointmentInfo> findAllInAffiliatedHospital(String affiliatedHospital);
 
-    List<AppointmentInfo> findAppointmentInfoByAmiDate(String amiDate);
+    List<AppointmentInfo> findAppointmentInfoByAmiDateAndAffiliatedHospital(String amiDate, String affiliatedHospital);
 
     void insertAppointmentInfo(AppointmentInfo appointmentInfo);
 

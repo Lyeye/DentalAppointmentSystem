@@ -6,15 +6,21 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Property;
 
+import java.util.Date;
+
 @Entity
 public class AppointmentInfo {
 
     @Id(autoincrement = true)
+    @Property(nameInDb = "APPOINTMENT_INFO_ID")
     private Long amiId;
 
     @Property(nameInDb = "USER_NAME")
     @NotNull
     private long userId;
+
+    @Property(nameInDb = "AFFLILIATED_HOSPITAL")
+    private String affiliatedHospital;
 
     @Property(nameInDb = "APPOINTMENT_INFO_DATE")
     private String amiDate;
@@ -25,20 +31,26 @@ public class AppointmentInfo {
     @Property(nameInDb = "APPOINTMENT_INFO_SYMPTOMS")
     private String amiSymptoms;
 
+    @Property(nameInDb = "CREATE_AT")
+    private Date createAt;
 
     @Generated(hash = 1142461733)
     public AppointmentInfo() {
     }
 
-    @Generated(hash = 1337533426)
-    public AppointmentInfo(Long amiId, long userId, String amiDate, String amiTime,
-                           String amiSymptoms) {
+
+    @Generated(hash = 751813133)
+    public AppointmentInfo(Long amiId, long userId, String affiliatedHospital,
+                           String amiDate, String amiTime, String amiSymptoms, Date createAt) {
         this.amiId = amiId;
         this.userId = userId;
+        this.affiliatedHospital = affiliatedHospital;
         this.amiDate = amiDate;
         this.amiTime = amiTime;
         this.amiSymptoms = amiSymptoms;
+        this.createAt = createAt;
     }
+
 
     public Long getAmiId() {
         return this.amiId;
@@ -87,9 +99,30 @@ public class AppointmentInfo {
         return "AppointmentInfo{" +
                 "amiId=" + amiId +
                 ", userId=" + userId +
+                ", affiliatedHospital='" + affiliatedHospital + '\'' +
                 ", amiDate='" + amiDate + '\'' +
                 ", amiTime='" + amiTime + '\'' +
                 ", amiSymptoms='" + amiSymptoms + '\'' +
+                ", createAt=" + createAt +
                 '}';
+    }
+
+    public String getAffiliatedHospital() {
+        return this.affiliatedHospital;
+    }
+
+
+    public void setAffiliatedHospital(String affiliatedHospital) {
+        this.affiliatedHospital = affiliatedHospital;
+    }
+
+
+    public Date getCreateAt() {
+        return this.createAt;
+    }
+
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 }

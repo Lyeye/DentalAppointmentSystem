@@ -41,7 +41,7 @@ public class FamilyNoticeRecyclerViewAdapter extends Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         userImpl = new UserImpl(context);
         User userById = userImpl.findUserById(noticeList.get(position).getUserId());
-        ((NoticeRecyclerViewHolder) holder).textView_notice.setText("       尊敬的" + userById.getUserName() + "先生/女士，请于" + noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime() + "前往" + userById.getAffiliatedHospital() + "就诊。");
+        ((NoticeRecyclerViewHolder) holder).textView_notice.setText("       尊敬的" + userById.getUserName() + "先生/女士，请于" + noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime() + "前往" + noticeList.get(position).getAffiliatedHospital() + "就诊。");
     }
 
     @Override

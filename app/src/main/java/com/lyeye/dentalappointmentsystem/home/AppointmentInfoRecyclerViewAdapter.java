@@ -37,6 +37,7 @@ public class AppointmentInfoRecyclerViewAdapter extends Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ((AppointmentInfoViewHolder) holder).textView_date.setText(appointmentInfos.get(position).getAmiDate());
+        ((AppointmentInfoViewHolder) holder).textView_hospital.setText(appointmentInfos.get(position).getAffiliatedHospital());
         ((AppointmentInfoViewHolder) holder).textView_time.setText(appointmentInfos.get(position).getAmiTime());
         ((AppointmentInfoViewHolder) holder).textView_symptom.setText(appointmentInfos.get(position).getAmiSymptoms());
     }
@@ -49,6 +50,7 @@ public class AppointmentInfoRecyclerViewAdapter extends Adapter<ViewHolder> {
     class AppointmentInfoViewHolder extends ViewHolder {
 
         private TextView textView_date;
+        private TextView textView_hospital;
         private TextView textView_time;
         private TextView textView_symptom;
 
@@ -56,6 +58,7 @@ public class AppointmentInfoRecyclerViewAdapter extends Adapter<ViewHolder> {
         public AppointmentInfoViewHolder(@NonNull View itemView) {
             super(itemView);
             textView_date = itemView.findViewById(R.id.tv_appointmentItem_date);
+            textView_hospital = itemView.findViewById(R.id.tv_appointmentItem_hospital);
             textView_time = itemView.findViewById(R.id.tv_appointmentItem_time);
             textView_symptom = itemView.findViewById(R.id.tv_appointmentItem_symptom);
         }

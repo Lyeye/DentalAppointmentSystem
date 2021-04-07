@@ -24,7 +24,7 @@ public class UserDao extends AbstractDao<User, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property UserId = new Property(0, Long.class, "userId", true, "_id");
+        public final static Property UserId = new Property(0, Long.class, "userId", true, "USER_ID");
         public final static Property UserName = new Property(1, String.class, "userName", false, "USER_NAME");
         public final static Property UserAge = new Property(2, Long.class, "userAge", false, "USER_AGE");
         public final static Property UserGender = new Property(3, String.class, "userGender", false, "USER_GENDER");
@@ -49,7 +49,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: userId
+                "\"USER_ID\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: userId
                 "\"USER_NAME\" TEXT NOT NULL ," + // 1: userName
                 "\"USER_AGE\" INTEGER," + // 2: userAge
                 "\"USER_GENDER\" TEXT," + // 3: userGender

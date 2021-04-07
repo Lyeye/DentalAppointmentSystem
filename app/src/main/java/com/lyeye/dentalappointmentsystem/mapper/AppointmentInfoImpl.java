@@ -7,6 +7,7 @@ import com.lyeye.dentalappointmentsystem.greendao.AppointmentInfoDao;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
 import com.lyeye.dentalappointmentsystem.greendao.DaoSession;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class AppointmentInfoImpl implements AppointmentInfoMapper {
@@ -39,14 +40,16 @@ public class AppointmentInfoImpl implements AppointmentInfoMapper {
     }
 
     @Override
-    public List<AppointmentInfo> findAll() {
-        return appointmentInfoDao.queryBuilder().list();
+    public List<AppointmentInfo> findAllInAffiliatedHospital(String affiliatedHospital) {
+        return appointmentInfoDao.queryBuilder()
+                .where(AppointmentInfoDao.Properties.AffiliatedHospital.eq(affiliatedHospital)).list();
     }
 
     @Override
-    public List<AppointmentInfo> findAppointmentInfoByAmiDate(String amiDate) {
+    public List<AppointmentInfo> findAppointmentInfoByAmiDateAndAffiliatedHospital(String amiDate, String affiliatedHospital) {
         return appointmentInfoDao.queryBuilder()
-                .where(AppointmentInfoDao.Properties.AmiDate.eq(amiDate)).list();
+                .where(AppointmentInfoDao.Properties.AmiDate.eq(amiDate))
+                .where(AppointmentInfoDao.Properties.AffiliatedHospital.eq(affiliatedHospital)).list();
     }
 
 

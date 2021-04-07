@@ -71,7 +71,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:hint="请在此输入病症信息"></EditText>
+                    android:hint="请在此输入病症信息"
+                    android:text="蛀牙"></EditText>
 
                 <TextView
                     android:layout_width="wrap_content"

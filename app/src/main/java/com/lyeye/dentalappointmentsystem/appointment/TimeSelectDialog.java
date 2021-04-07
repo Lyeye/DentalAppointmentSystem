@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.util;
+package com.lyeye.dentalappointmentsystem.appointment;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,12 +15,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.appointment.AppointmentDetailActivity;
 import com.lyeye.dentalappointmentsystem.appointment.DateSelectionActivity;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
+import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -35,6 +40,8 @@ public class TimeSelectDialog extends Dialog {
     private Context context;
     private String dateSelected;
     private String symptom;
+    private String affiliatedHospital;
+    private Date currentTime;
     private long userId;
     private List<String> hasAppointmentTimes = new ArrayList<>();
     private SharedPreferences sharedPreferences;
@@ -80,8 +87,11 @@ public class TimeSelectDialog extends Dialog {
                                     appointmentInfo.setAmiDate(dateSelected);
                                     appointmentInfo.setAmiTime(button.getText().toString());
                                     appointmentInfo.setAmiSymptoms(symptom);
+                                    appointmentInfo.setAffiliatedHospital(affiliatedHospital);
+                                    appointmentInfo.setCreateAt(currentTime);
                                     appointmentInfoImpl.insertAppointmentInfo(appointmentInfo);
                                     ToastUtil.showMsg(context, "添加成功,id:" + appointmentInfo.getAmiId());
+                                    Log.d(null, "appointmentInfo: " + appointmentInfo.toString());
                                     Intent intent = new Intent(context, MainActivity.class);
                                     context.startActivity(intent);
                                 }
@@ -101,7 +111,7 @@ public class TimeSelectDialog extends Dialog {
         textView_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DateSelectionActivity.class);
+                Intent intent = new Intent(context, AppointmentDetailActivity.class);
                 context.startActivity(intent);
                 dismiss();
             }
@@ -138,37 +148,60 @@ public class TimeSelectDialog extends Dialog {
         appointmentInfoImpl = new AppointmentInfoImpl(context);
         sharedPreferences = context.getSharedPreferences("user_info", Context.MODE_PRIVATE);
         userId = sharedPreferences.getLong("userId", 999999999);
+        affiliatedHospital = sharedPreferences.getString("affiliatedHospital", "");
+        currentTime = new Date();
 
-        Log.d(null, "hasAppointments: " + hasAppointmentTimes.size());
-
+        int[] count = new int[8];
         for (int i = 0; i < hasAppointmentTimes.size(); i++) {
             if (hasAppointmentTimes.get(i).equals("8:00-9:00")) {
-                button1.setText("已被预约");
-                button1.setEnabled(false);
+                count[0]++;
+                if (count[0] >= 2) {
+                    button1.setText("预约满");
+                    button1.setEnabled(false);
+                }
             } else if (hasAppointmentTimes.get(i).equals("9:00-10:00")) {
-                button2.setText("已被预约");
-                button2.setEnabled(false);
+                count[1]++;
+                if (count[1] >= 2) {
+                    button2.setText("预约满");
+                    button2.setEnabled(false);
+                }
             } else if (hasAppointmentTimes.get(i).equals("10:00-11:00")) {
-                button3.setText("已被预约");
-                button3.setEnabled(false);
+                count[2]++;
+                if (count[2] >= 2) {
+                    button3.setText("预约满");
+                    button3.setEnabled(false);
+                }
             } else if (hasAppointmentTimes.get(i).equals("11:00-12:00")) {
-                button4.setText("已被预约");
-                button4.setEnabled(false);
+                count[3]++;
+                if (count[3] >= 2) {
+                    button4.setText("预约满");
+                    button4.setEnabled(false);
+                }
             } else if (hasAppointmentTimes.get(i).equals("14:30-15:30")) {
-                button5.setText("已被预约");
-                button5.setEnabled(false);
+                count[4]++;
+                if (count[4] >= 2) {
+                    button5.setText("预约满");
+                    button5.setEnabled(false);
+                }
             } else if (hasAppointmentTimes.get(i).equals("15:30-16:30")) {
-                button6.setText("已被预约");
-                button6.setEnabled(false);
+                count[5]++;
+                if (count[5] >= 2) {
+                    button6.setText("预约满");
+                    button6.setEnabled(false);
+                }
             } else if (hasAppointmentTimes.get(i).equals("16:30-17:30")) {
-                button7.setText("已被预约");
-                button7.setEnabled(false);
+                count[6]++;
+                if (count[6] >= 2) {
+                    button7.setText("预约满");
+                    button7.setEnabled(false);
+                }
             } else if (hasAppointmentTimes.get(i).equals("17:30-18:30")) {
-                button8.setText("已被预约");
-                button8.setEnabled(false);
+                count[7]++;
+                if (count[7] >= 2) {
+                    button8.setText("预约满");
+                    button8.setEnabled(false);
+                }
             }
         }
-
-
     }
 }

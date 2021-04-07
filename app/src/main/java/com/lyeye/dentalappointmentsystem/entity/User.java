@@ -12,6 +12,7 @@ import java.util.Date;
 public class User {
 
     @Id(autoincrement = true)
+    @Property(nameInDb = "USER_ID")
     private Long userId;
 
     @Property(nameInDb = "USER_NAME")

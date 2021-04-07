@@ -3,14 +3,17 @@ package com.lyeye.dentalappointmentsystem.appointment;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.home.MainActivity;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class AppointmentDetailActivity extends AppCompatActivity {
 
@@ -66,6 +69,29 @@ public class AppointmentDetailActivity extends AppCompatActivity {
                 textView_level.setBackground(getResources().getDrawable(R.color.greenyellow));
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(AppointmentDetailActivity.this, SweetAlertDialog.WARNING_TYPE);
+            sweetAlertDialog.setTitleText("是否取消本次预约").setConfirmText("是的").setCancelText("我再想想")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            Intent intent = new Intent(AppointmentDetailActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismissWithAnimation();
+                        }
+                    }).show();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void init() {

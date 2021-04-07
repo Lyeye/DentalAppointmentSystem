@@ -3,8 +3,10 @@ package com.lyeye.dentalappointmentsystem.home;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +27,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,9 +38,13 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.appointment.AppointmentActivity;
 import com.lyeye.dentalappointmentsystem.camera.CameraActivity;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+import com.lyeye.dentalappointmentsystem.entity.Hospital;
+import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.family.MyFamilyActivity;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
 import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.mapper.HospitalImpl;
+import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
 import com.lyeye.dentalappointmentsystem.notice.NoticeActivity;
 import com.lyeye.dentalappointmentsystem.scan.ScanActivity;
 import com.lyeye.dentalappointmentsystem.remote.JoinRoomActivity;
@@ -63,9 +71,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView imageView_userPhoto;
     private String paths;
     private SharedPreferences sharedPreferences;
+    private Editor editor;
+    private User user;
     private String userName;
     private long userId;
     private AppointmentInfoImpl appointmentInfoImpl;
+    private HospitalImpl hospitalImpl;
+    private UserImpl userImpl;
+    private List<Hospital> hospitals;
     private List<AppointmentInfo> appointmentInfos;
     private boolean isLogin;
     private boolean isExit;
@@ -105,13 +118,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView_appointmentInfo = findViewById(R.id.rv_main_appointmentInfo);
         imageView_userPhoto = findViewById(R.id.iv_main_userPhoto);
 
+        userImpl = new UserImpl(MainActivity.this);
         appointmentInfoImpl = new AppointmentInfoImpl(MainActivity.this);
+        hospitalImpl = new HospitalImpl(MainActivity.this);
         sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         userName = sharedPreferences.getString("username", "登录/注册");
         userId = sharedPreferences.getLong("userId", 999999999);
         textView_username.setText(userName);
         textView_gender.setText(sharedPreferences.getString("gender", ""));
-        textView_affiliatedHospital.setText(sharedPreferences.getString("affiliatedHospital", ""));
+        textView_affiliatedHospital.setText(sharedPreferences.getString("affiliatedHospital", "仁康医院"));
         textView_diagnosisNumber.setText(sharedPreferences.getString("diagnosisNumber", ""));
         Glide.with(MainActivity.this).load("https://pic3.zhimg.com/v2-d479b9589ae3b2a873936bd8f189bd85_r.jpg?source=1940ef5c").into(imageView_userPhoto);
 
@@ -119,12 +135,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             isLogin = true;
         }
 
+        hospitals = hospitalImpl.findAll();
+        user = userImpl.findUserById(userId);
+
         List<AppointmentInfo> appointmentInfosByUserId = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
         appointmentInfos = appointmentInfosByUserId;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
         linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         recyclerView_appointmentInfo.setLayoutManager(linearLayoutManager);
         recyclerView_appointmentInfo.setAdapter(new AppointmentInfoRecyclerViewAdapter(MainActivity.this, appointmentInfos));
+
     }
 
     @Override
@@ -169,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setOnClick() {
         textView_username.setOnClickListener(this);
+        textView_affiliatedHospital.setOnClickListener(this);
         button_register.setOnClickListener(this);
         button_appointment.setOnClickListener(this);
         button_myfamily.setOnClickListener(this);
@@ -202,6 +223,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_main_username:
                 intent = new Intent(MainActivity.this, WelcomeActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.tv_main_affiliatedHospital:
+                String[] hospitalList = new String[5];
+                for (int i = 0; i < 5; i++) {
+                    hospitalList[i] = hospitals.get(i).getHospitalName();
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("选择医院").setIcon(R.drawable.ic_hospital)
+                        .setSingleChoiceItems(hospitalList, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                user.setAffiliatedHospital(hospitalList[which]);
+                                DaoManager.getInstance().getDaoSession()
+                                        .getUserDao().update(user);
+                                ToastUtil.showMsg(MainActivity.this, "您选择了" + hospitalList[which]);
+                                textView_affiliatedHospital.setText(hospitalList[which]);
+                                editor.putString("affiliatedHospital", hospitalList[which]).apply();
+                                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                            }
+                        }).show();
                 break;
             case R.id.btn_main_register:
                 if (isLogin) {

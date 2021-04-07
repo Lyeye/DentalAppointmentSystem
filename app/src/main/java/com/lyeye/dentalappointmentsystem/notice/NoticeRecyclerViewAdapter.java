@@ -13,6 +13,7 @@ import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static androidx.recyclerview.widget.RecyclerView.Adapter;
@@ -40,8 +41,10 @@ public class NoticeRecyclerViewAdapter extends Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         userImpl = new UserImpl(context);
         User userById = userImpl.findUserById(noticeList.get(position).getUserId());
-        ((NoticeRecyclerViewHolder) holder).textView_notice.setText("       尊敬的" + userById.getUserName() + "先生/女士，请于" + noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime() + "前往" + userById.getAffiliatedHospital() + "就诊。");
-        ((NoticeRecyclerViewHolder) holder).textView_time.setText(noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime());
+        ((NoticeRecyclerViewHolder) holder).textView_notice.setText("       尊敬的" + userById.getUserName() + "，请于" + noticeList.get(position).getAmiDate() + " " + noticeList.get(position).getAmiTime() + "前往" + noticeList.get(position).getAffiliatedHospital() + "就诊。");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String createAt = df.format(noticeList.get(position).getCreateAt());
+        ((NoticeRecyclerViewHolder) holder).textView_time.setText(createAt);
     }
 
     @Override
