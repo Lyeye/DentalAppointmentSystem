@@ -122,6 +122,7 @@ public class RegisterFragment extends Fragment {
                 user.setUserBirthday(birthday);
                 user.setAffiliatedHospital(spinner_hospital.getSelectedItem().toString());
                 user.setDiagnosisNumber(diagnosisNumber);
+                user.setCreateAt(new Date());
 
                 boolean isEmail = isEmail(editText_email.getText().toString());
                 boolean isMobile = isMobile(editText_phone.getText().toString());

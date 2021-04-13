@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.adapter.MyFamilyAppointmentRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.appointment.XLinearLayoutManager;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.entity.User;
@@ -56,8 +57,7 @@ public class FamilyAppointmentInfoActivity extends AppCompatActivity {
             }
         });
 
-        List<AppointmentInfo> appointmentInfosByUserId = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
-        scheduleList = appointmentInfosByUserId;
+        scheduleList = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
         recyclerView.setLayoutManager(new XLinearLayoutManager(FamilyAppointmentInfoActivity.this, LinearLayoutManager.VERTICAL, false));
         MyFamilyAppointmentRecyclerViewAdapter myFamilyAppointmentRecyclerViewAdapter = new MyFamilyAppointmentRecyclerViewAdapter(FamilyAppointmentInfoActivity.this, scheduleList);
         recyclerView.setAdapter(myFamilyAppointmentRecyclerViewAdapter);

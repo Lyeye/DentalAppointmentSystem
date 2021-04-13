@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.appointment;
+package com.lyeye.dentalappointmentsystem.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -25,7 +25,7 @@ public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<Recycle
 
     private Context context;
     private List<AppointmentInfo> scheduleList;
-    private AppointmentInfoImpl appointmentInfoIpml;
+    private AppointmentInfoImpl appointmentInfoImpl;
 
 
     public AppointmentRecyclerViewAdapter(Context context, List<AppointmentInfo> list) {
@@ -65,7 +65,7 @@ public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<Recycle
 
         String amiDate = scheduleList.get(position).getAmiDate();
         String amiTime = scheduleList.get(position).getAmiTime();
-        appointmentInfoIpml = new AppointmentInfoImpl(context);
+        appointmentInfoImpl = new AppointmentInfoImpl(context);
         /*设置侧滑显示模式*/
         ((AmRecyclerViewHolder) holder).swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         ((AmRecyclerViewHolder) holder).textView_am_delete.setOnClickListener(new View.OnClickListener() {
@@ -79,8 +79,8 @@ public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<Recycle
                 sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        AppointmentInfo appointmentInfo = appointmentInfoIpml.findAppointmentInfo(scheduleList.get(position).getAmiId());
-                        appointmentInfoIpml.deleteAppointmentInfo(appointmentInfo);
+                        AppointmentInfo appointmentInfo = appointmentInfoImpl.findAppointmentInfo(scheduleList.get(position).getAmiId());
+                        appointmentInfoImpl.deleteAppointmentInfo(appointmentInfo);
                         scheduleList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(0, scheduleList.size());

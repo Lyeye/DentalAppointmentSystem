@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.adapter.NoticeRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.appointment.XLinearLayoutManager;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;

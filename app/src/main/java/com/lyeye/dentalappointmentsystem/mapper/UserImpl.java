@@ -1,11 +1,14 @@
 package com.lyeye.dentalappointmentsystem.mapper;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
 import com.lyeye.dentalappointmentsystem.greendao.DaoSession;
 import com.lyeye.dentalappointmentsystem.greendao.UserDao;
+
+import java.util.List;
 
 
 public class UserImpl implements UserMapper {
@@ -21,6 +24,11 @@ public class UserImpl implements UserMapper {
         daoManager.initGreenDao(context, "DentalAppoitmentSystem");
         daoSession = daoManager.getDaoSession();
         userDao = daoSession.getUserDao();
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userDao.queryBuilder().list();
     }
 
     @Override
@@ -44,5 +52,10 @@ public class UserImpl implements UserMapper {
     @Override
     public void insertUser(User user) {
         userDao.insert(user);
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        userDao.delete(user);
     }
 }

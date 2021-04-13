@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.home;
+package com.lyeye.dentalappointmentsystem.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,11 +20,11 @@ import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
 public class AppointmentInfoRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     private Context context;
-    private List<AppointmentInfo> appointmentInfos;
+    private List<AppointmentInfo> appointmentInfoList;
 
     public AppointmentInfoRecyclerViewAdapter(Context context, List<AppointmentInfo> appointmentInfos) {
         this.context = context;
-        this.appointmentInfos = appointmentInfos;
+        this.appointmentInfoList = appointmentInfos;
     }
 
     @NonNull
@@ -36,15 +36,15 @@ public class AppointmentInfoRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ((AppointmentInfoViewHolder) holder).textView_date.setText(appointmentInfos.get(position).getAmiDate());
-        ((AppointmentInfoViewHolder) holder).textView_hospital.setText(appointmentInfos.get(position).getAffiliatedHospital());
-        ((AppointmentInfoViewHolder) holder).textView_time.setText(appointmentInfos.get(position).getAmiTime());
-        ((AppointmentInfoViewHolder) holder).textView_symptom.setText(appointmentInfos.get(position).getAmiSymptoms());
+        ((AppointmentInfoViewHolder) holder).textView_date.setText(appointmentInfoList.get(position).getAmiDate());
+        ((AppointmentInfoViewHolder) holder).textView_hospital.setText(appointmentInfoList.get(position).getAffiliatedHospital());
+        ((AppointmentInfoViewHolder) holder).textView_time.setText(appointmentInfoList.get(position).getAmiTime());
+        ((AppointmentInfoViewHolder) holder).textView_symptom.setText(appointmentInfoList.get(position).getAmiSymptoms());
     }
 
     @Override
     public int getItemCount() {
-        return appointmentInfos.size();
+        return appointmentInfoList.size();
     }
 
     class AppointmentInfoViewHolder extends ViewHolder {

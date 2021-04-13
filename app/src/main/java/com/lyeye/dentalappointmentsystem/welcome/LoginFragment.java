@@ -21,19 +21,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.entity.Administrator;
 import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
+import com.lyeye.dentalappointmentsystem.mapper.AdministratorImpl;
 import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
 
 public class LoginFragment extends Fragment {
 
-    private Button button_signUp;
+    private Button button_signIn;
     private EditText editText_userEmail, editText_pwd;
-    private TextView textView_signIn;
+    private TextView textView_signUp, textView_adminLogin;
 
     private RegisterFragment registerFragment;
+    private AdminLoginFragment adminLoginFragment;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sp_editor;
     private UserImpl userImpl;
@@ -50,13 +53,14 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        button_signUp = view.findViewById(R.id.btn_fl_signup);
+        button_signIn = view.findViewById(R.id.btn_fl_sign_in);
         editText_userEmail = view.findViewById(R.id.et_fl_useremail);
         editText_pwd = view.findViewById(R.id.et_fl_password);
-        textView_signIn = view.findViewById(R.id.tv_fl_signin);
+        textView_signUp = view.findViewById(R.id.tv_fl_sign_up);
+        textView_adminLogin = view.findViewById(R.id.tv_fl_admin_login);
 
 
-        button_signUp.setOnClickListener(new View.OnClickListener() {
+        button_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
@@ -93,12 +97,32 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        textView_adminLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adminLoginFragment = new AdminLoginFragment();
+                WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
+                Administrator administrator = new Administrator();
+                administrator.setAdministratorName("admin");
+                administrator.setAdministratorEmail("admin@lyeye.com");
+                administrator.setAdministratorPwd("123");
+                new AdministratorImpl(welcomeActivity).addAdmin(administrator);
+                FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction
+                        .addToBackStack(null)
+                        .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
+                        .replace(R.id.fl_swl_container, adminLoginFragment)
+                        .commitAllowingStateLoss();
+            }
+        });
+
         /*
         给Sign In添加下划线
         */
-        textView_signIn.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        textView_signUp.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-        textView_signIn.setOnClickListener(new View.OnClickListener() {
+        textView_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerFragment = new RegisterFragment();

@@ -43,16 +43,21 @@ public class User {
     @Property(nameInDb = "DIAGNOSIS_NUMBER")
     private String diagnosisNumber;
 
+    @Property(nameInDb = "HEAD_PORTRAIT")
+    private String headPortrait;
+
+    @Property(nameInDb = "CREATE_AT")
+    private Date createAt;
 
     @Generated(hash = 586692638)
     public User() {
     }
 
-    @Generated(hash = 1491873404)
-    public User(Long userId, @NotNull String userName, Long userAge,
-                String userGender, String userPwd, String userEmail,
-                String userPhoneNumber, String affiliatedHospital, Date userBirthday,
-                String diagnosisNumber) {
+    @Generated(hash = 2071083648)
+    public User(Long userId, @NotNull String userName, Long userAge, String userGender,
+                String userPwd, String userEmail, String userPhoneNumber,
+                String affiliatedHospital, Date userBirthday, String diagnosisNumber,
+                String headPortrait, Date createAt) {
         this.userId = userId;
         this.userName = userName;
         this.userAge = userAge;
@@ -63,6 +68,8 @@ public class User {
         this.affiliatedHospital = affiliatedHospital;
         this.userBirthday = userBirthday;
         this.diagnosisNumber = diagnosisNumber;
+        this.headPortrait = headPortrait;
+        this.createAt = createAt;
     }
 
     public Long getUserId() {
@@ -113,22 +120,6 @@ public class User {
         this.affiliatedHospital = affiliatedHospital;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", userAge=" + userAge +
-                ", userGender='" + userGender + '\'' +
-                ", userPwd='" + userPwd + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                ", userPhoneNumber='" + userPhoneNumber + '\'' +
-                ", affiliatedHospital='" + affiliatedHospital + '\'' +
-                ", userBirthday=" + userBirthday +
-                ", diagnosisNumber='" + diagnosisNumber + '\'' +
-                '}';
-    }
-
     public Long getUserAge() {
         return this.userAge;
     }
@@ -159,5 +150,39 @@ public class User {
 
     public void setDiagnosisNumber(String diagnosisNumber) {
         this.diagnosisNumber = diagnosisNumber;
+    }
+
+    public String getHeadPortrait() {
+        return this.headPortrait;
+    }
+
+    public void setHeadPortrait(String headPortrait) {
+        this.headPortrait = headPortrait;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userAge=" + userAge +
+                ", userGender='" + userGender + '\'' +
+                ", userPwd='" + userPwd + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPhoneNumber='" + userPhoneNumber + '\'' +
+                ", affiliatedHospital='" + affiliatedHospital + '\'' +
+                ", userBirthday=" + userBirthday +
+                ", diagnosisNumber='" + diagnosisNumber + '\'' +
+                ", headPortrait='" + headPortrait + '\'' +
+                ", createAt=" + createAt +
+                '}';
+    }
+
+    public Date getCreateAt() {
+        return this.createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 }

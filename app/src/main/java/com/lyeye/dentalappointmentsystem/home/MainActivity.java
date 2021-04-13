@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.adapter.AppointmentInfoRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.appointment.AppointmentActivity;
 import com.lyeye.dentalappointmentsystem.camera.CameraActivity;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
@@ -56,10 +56,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.util.List;
-
-import cn.bmob.v3.datatype.BmobFile;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -129,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView_gender.setText(sharedPreferences.getString("gender", ""));
         textView_affiliatedHospital.setText(sharedPreferences.getString("affiliatedHospital", "仁康医院"));
         textView_diagnosisNumber.setText(sharedPreferences.getString("diagnosisNumber", ""));
-        Glide.with(MainActivity.this).load("https://pic3.zhimg.com/v2-d479b9589ae3b2a873936bd8f189bd85_r.jpg?source=1940ef5c").into(imageView_userPhoto);
 
         if (sharedPreferences.getString("username", "登录/注册") != "登录/注册") {
             isLogin = true;
@@ -145,6 +141,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView_appointmentInfo.setLayoutManager(linearLayoutManager);
         recyclerView_appointmentInfo.setAdapter(new AppointmentInfoRecyclerViewAdapter(MainActivity.this, appointmentInfos));
 
+        if (user.getHeadPortrait() == null) {
+            Glide.with(MainActivity.this).load("https://pic3.zhimg.com/v2-d479b9589ae3b2a873936bd8f189bd85_r.jpg?source=1940ef5c").into(imageView_userPhoto);
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeFile(user.getHeadPortrait());
+            Glide.with(this).load(bitmap).into(imageView_userPhoto);
+        }
     }
 
     @Override
@@ -307,40 +309,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 cursor.close();
                 Bitmap bitmap = BitmapFactory.decodeFile(paths);
                 Glide.with(this).load(bitmap).into(imageView_userPhoto);
-                BmobFile userPic = new BmobFile(new File(paths));
-
-
-                /*需要绑定备案域名，暂时无法完成*/
-//                userPic.upload(new UploadFileListener() {
-//                    @Override
-//                    public void done(BmobException e) {
-//                        if (e == null) {
-//                            Log.d(null, "上传头像成功");
-//                        } else {
-//                            Log.d(null, "上传头像失败:" + e.toString());
-//                        }
-//                    }
-//                });
-//                BmobQuery<BmobUser> bmobUserBmobQuery = new BmobQuery<>();
-//                bmobUserBmobQuery.addWhereEqualTo("userName", userName);
-//                bmobUserBmobQuery.findObjects(new FindListener<BmobUser>() {
-//                    @Override
-//                    public void done(List<BmobUser> list, BmobException e) {
-//                        BmobUser bmobUser = list.get(0);
-//                        bmobUser.setUserPic(userPic);
-//                        bmobUser.save(new SaveListener<String>() {
-//                            @Override
-//                            public void done(String s, BmobException e) {
-//                                if (e == null) {
-//                                    Log.d(null, "修改头像成功");
-//                                } else {
-//                                    Log.d(null, "修改头像失败:" + e.toString());
-//                                }
-//                            }
-//                        });
-//                    }
-//                });
-
+                user.setHeadPortrait(paths);
+                DaoManager.getInstance().getDaoSession()
+                        .getUserDao().update(user);
             } catch (Exception e) {
                 e.printStackTrace();
             }

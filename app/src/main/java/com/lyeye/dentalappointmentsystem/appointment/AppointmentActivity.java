@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.adapter.AppointmentRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
 
@@ -72,8 +73,7 @@ public class AppointmentActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        List<AppointmentInfo> appointmentInfos = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
-        appointmentScheduleList = appointmentInfos;
+        appointmentScheduleList = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
         recyclerView.setLayoutManager(new XLinearLayoutManager(AppointmentActivity.this, LinearLayoutManager.VERTICAL, false));
         final AppointmentRecyclerViewAdapter appointmentRecyclerViewAdapter
                 = new AppointmentRecyclerViewAdapter(AppointmentActivity.this, appointmentScheduleList);

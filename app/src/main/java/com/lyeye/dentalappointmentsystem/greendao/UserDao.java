@@ -34,6 +34,8 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property AffiliatedHospital = new Property(7, String.class, "affiliatedHospital", false, "AFFLILIATED_HOSPITAL");
         public final static Property UserBirthday = new Property(8, java.util.Date.class, "userBirthday", false, "USER_BIRTHDAY");
         public final static Property DiagnosisNumber = new Property(9, String.class, "diagnosisNumber", false, "DIAGNOSIS_NUMBER");
+        public final static Property HeadPortrait = new Property(10, String.class, "headPortrait", false, "HEAD_PORTRAIT");
+        public final static Property CreateAt = new Property(11, java.util.Date.class, "createAt", false, "CREATE_AT");
     }
 
 
@@ -58,7 +60,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 "\"USER_PHONE_NUMBER\" TEXT," + // 6: userPhoneNumber
                 "\"AFFLILIATED_HOSPITAL\" TEXT," + // 7: affiliatedHospital
                 "\"USER_BIRTHDAY\" INTEGER," + // 8: userBirthday
-                "\"DIAGNOSIS_NUMBER\" TEXT);"); // 9: diagnosisNumber
+                "\"DIAGNOSIS_NUMBER\" TEXT," + // 9: diagnosisNumber
+                "\"HEAD_PORTRAIT\" TEXT," + // 10: headPortrait
+                "\"CREATE_AT\" INTEGER);"); // 11: createAt
     }
 
     /** Drops the underlying database table. */
@@ -106,15 +110,25 @@ public class UserDao extends AbstractDao<User, Long> {
         if (affiliatedHospital != null) {
             stmt.bindString(8, affiliatedHospital);
         }
- 
+
         java.util.Date userBirthday = entity.getUserBirthday();
         if (userBirthday != null) {
             stmt.bindLong(9, userBirthday.getTime());
         }
- 
+
         String diagnosisNumber = entity.getDiagnosisNumber();
         if (diagnosisNumber != null) {
             stmt.bindString(10, diagnosisNumber);
+        }
+
+        String headPortrait = entity.getHeadPortrait();
+        if (headPortrait != null) {
+            stmt.bindString(11, headPortrait);
+        }
+
+        java.util.Date createAt = entity.getCreateAt();
+        if (createAt != null) {
+            stmt.bindLong(12, createAt.getTime());
         }
     }
 
@@ -157,15 +171,25 @@ public class UserDao extends AbstractDao<User, Long> {
         if (affiliatedHospital != null) {
             stmt.bindString(8, affiliatedHospital);
         }
- 
+
         java.util.Date userBirthday = entity.getUserBirthday();
         if (userBirthday != null) {
             stmt.bindLong(9, userBirthday.getTime());
         }
- 
+
         String diagnosisNumber = entity.getDiagnosisNumber();
         if (diagnosisNumber != null) {
             stmt.bindString(10, diagnosisNumber);
+        }
+
+        String headPortrait = entity.getHeadPortrait();
+        if (headPortrait != null) {
+            stmt.bindString(11, headPortrait);
+        }
+
+        java.util.Date createAt = entity.getCreateAt();
+        if (createAt != null) {
+            stmt.bindLong(12, createAt.getTime());
         }
     }
 
@@ -177,16 +201,18 @@ public class UserDao extends AbstractDao<User, Long> {
     @Override
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // userId
-            cursor.getString(offset + 1), // userName
-            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // userAge
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // userGender
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // userPwd
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // userEmail
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // userPhoneNumber
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // affiliatedHospital
-            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)), // userBirthday
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // diagnosisNumber
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // userId
+                cursor.getString(offset + 1), // userName
+                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // userAge
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // userGender
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // userPwd
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // userEmail
+                cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // userPhoneNumber
+                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // affiliatedHospital
+                cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)), // userBirthday
+                cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // diagnosisNumber
+                cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // headPortrait
+                cursor.isNull(offset + 11) ? null : new java.util.Date(cursor.getLong(offset + 11)) // createAt
         );
         return entity;
     }
@@ -203,7 +229,9 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setAffiliatedHospital(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setUserBirthday(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
         entity.setDiagnosisNumber(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-     }
+        entity.setHeadPortrait(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setCreateAt(cursor.isNull(offset + 11) ? null : new java.util.Date(cursor.getLong(offset + 11)));
+    }
     
     @Override
     protected final Long updateKeyAfterInsert(User entity, long rowId) {

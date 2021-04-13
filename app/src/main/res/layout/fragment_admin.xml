@@ -22,28 +22,18 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_main_user"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="25sp"
-                android:src="@mipmap/ic_user"
-                app:civ_border_color="@color/gray_8f"
-                app:civ_border_width="2dp" />
 
             <EditText
-                android:id="@+id/et_fl_useremail"
+                android:id="@+id/et_fa_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:drawableLeft="@mipmap/ic_launcher_user"
-                android:hint="请输入用户邮箱"
-                android:text="123@qq.com" />
+                android:hint="请输入管理员邮箱"
+                android:text="admin@lyeye.com" />
 
             <EditText
-                android:id="@+id/et_fl_password"
+                android:id="@+id/et_fa_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@mipmap/ic_launcher_pwd"
@@ -51,7 +41,7 @@
                 android:text="123" />
 
             <Button
-                android:id="@+id/btn_fl_sign_in"
+                android:id="@+id/btn_fa_sign_in"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -63,25 +53,6 @@
                 android:textColor="@color/whitesmoke"
                 android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/tv_fl_admin_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:gravity="center"
-                android:text="管理员登录"
-                android:textColor="@color/pink"
-                android:textSize="15dp" />
-
-            <TextView
-                android:id="@+id/tv_fl_sign_up"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:gravity="center"
-                android:text="注册"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

@@ -5,6 +5,7 @@ import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import java.util.List;
 
 public interface AppointmentInfoMapper {
+
     List<AppointmentInfo> findAppointmentInfoByUserId(long uid);
 
     AppointmentInfo findAppointmentInfo(long aimId);

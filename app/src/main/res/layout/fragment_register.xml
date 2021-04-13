@@ -92,7 +92,8 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="5dp"
                 android:drawableLeft="@mipmap/ic_register_phone"
-                android:hint="请输入手机号" />
+                android:hint="请输入手机号"
+                android:text="17727290783" />
 
             <EditText
                 android:id="@+id/et_fr_email"
@@ -102,7 +103,8 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="5dp"
                 android:drawableLeft="@mipmap/ic_register_email"
-                android:hint="请输入邮箱" />
+                android:hint="请输入邮箱"
+                android:text="123@qq.com" />
 
             <EditText
                 android:id="@+id/et_fr_username"
@@ -112,7 +114,8 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="5dp"
                 android:drawableLeft="@mipmap/ic_launcher_user"
-                android:hint="请输入用户名" />
+                android:hint="请输入用户名"
+                android:text="user" />
 
             <EditText
                 android:id="@+id/et_fr_password"
@@ -121,7 +124,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:drawableLeft="@mipmap/ic_launcher_pwd"
-                android:hint="请输入密码" />
+                android:hint="请输入密码"
+                android:text="123" />
 
             <EditText
                 android:id="@+id/et_fr_confirmpassword"
@@ -130,7 +134,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:drawableLeft="@mipmap/ic_register_confirmpwd"
-                android:hint="请再次输入密码" />
+                android:hint="请再次输入密码"
+                android:text="123" />
 
             <Button
                 android:id="@+id/btn_fr_register"

@@ -19,7 +19,7 @@
             android:id="@+id/iv_main_userInfo"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:background="@mipmap/ic_doctor"
+            android:background="@mipmap/ic_user"
             android:scaleType="fitCenter" />
 
         <TextView

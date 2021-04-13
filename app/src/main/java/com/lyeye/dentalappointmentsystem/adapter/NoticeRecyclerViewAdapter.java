@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.notice;
+package com.lyeye.dentalappointmentsystem.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

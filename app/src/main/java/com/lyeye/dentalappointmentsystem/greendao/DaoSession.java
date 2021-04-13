@@ -8,10 +8,12 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.lyeye.dentalappointmentsystem.entity.Administrator;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.entity.Hospital;
 import com.lyeye.dentalappointmentsystem.entity.User;
 
+import com.lyeye.dentalappointmentsystem.greendao.AdministratorDao;
 import com.lyeye.dentalappointmentsystem.greendao.AppointmentInfoDao;
 import com.lyeye.dentalappointmentsystem.greendao.HospitalDao;
 import com.lyeye.dentalappointmentsystem.greendao.UserDao;
@@ -25,10 +27,12 @@ import com.lyeye.dentalappointmentsystem.greendao.UserDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig administratorDaoConfig;
     private final DaoConfig appointmentInfoDaoConfig;
     private final DaoConfig hospitalDaoConfig;
     private final DaoConfig userDaoConfig;
 
+    private final AdministratorDao administratorDao;
     private final AppointmentInfoDao appointmentInfoDao;
     private final HospitalDao hospitalDao;
     private final UserDao userDao;
@@ -36,6 +40,9 @@ public class DaoSession extends AbstractDaoSession {
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
+
+        administratorDaoConfig = daoConfigMap.get(AdministratorDao.class).clone();
+        administratorDaoConfig.initIdentityScope(type);
 
         appointmentInfoDaoConfig = daoConfigMap.get(AppointmentInfoDao.class).clone();
         appointmentInfoDaoConfig.initIdentityScope(type);
@@ -46,19 +53,26 @@ public class DaoSession extends AbstractDaoSession {
         userDaoConfig = daoConfigMap.get(UserDao.class).clone();
         userDaoConfig.initIdentityScope(type);
 
+        administratorDao = new AdministratorDao(administratorDaoConfig, this);
         appointmentInfoDao = new AppointmentInfoDao(appointmentInfoDaoConfig, this);
         hospitalDao = new HospitalDao(hospitalDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
 
+        registerDao(Administrator.class, administratorDao);
         registerDao(AppointmentInfo.class, appointmentInfoDao);
         registerDao(Hospital.class, hospitalDao);
         registerDao(User.class, userDao);
     }
 
     public void clear() {
+        administratorDaoConfig.clearIdentityScope();
         appointmentInfoDaoConfig.clearIdentityScope();
         hospitalDaoConfig.clearIdentityScope();
         userDaoConfig.clearIdentityScope();
+    }
+
+    public AdministratorDao getAdministratorDao() {
+        return administratorDao;
     }
 
     public AppointmentInfoDao getAppointmentInfoDao() {
