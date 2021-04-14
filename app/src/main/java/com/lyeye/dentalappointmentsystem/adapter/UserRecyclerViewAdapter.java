@@ -14,7 +14,9 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.administration.UserAppointmentActivity;
+import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.entity.User;
+import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
@@ -29,6 +31,7 @@ public class UserRecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     private Context context;
     private List<User> userList;
     private UserImpl userImpl;
+    private AppointmentInfoImpl appointmentInfoImpl;
 
     public UserRecyclerViewAdapter(Context context, List<User> list) {
         this.context = context;
@@ -76,6 +79,7 @@ public class UserRecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         String userName = userList.get(position).getUserName();
 
         userImpl = new UserImpl(context);
+        appointmentInfoImpl = new AppointmentInfoImpl(context);
 
         /*设置侧滑显示模式*/
         ((AmRecyclerViewHolder) holder).swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
@@ -91,6 +95,10 @@ public class UserRecyclerViewAdapter extends RecyclerSwipeAdapter<RecyclerView.V
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         User userById = UserRecyclerViewAdapter.this.userImpl.findUserById(userList.get(position).getUserId());
+                        List<AppointmentInfo> appointmentInfoByUserId = appointmentInfoImpl.findAppointmentInfoByUserId(userList.get(position).getUserId());
+                        for (int i = 0; i < appointmentInfoByUserId.size(); i++) {
+                            appointmentInfoImpl.deleteAppointmentInfo(appointmentInfoByUserId.get(i));
+                        }
                         UserRecyclerViewAdapter.this.userImpl.deleteUser(userById);
                         userList.remove(position);
                         notifyItemRemoved(position);

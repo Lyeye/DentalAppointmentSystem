@@ -18,7 +18,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MyInformationActivity extends AppCompatActivity {
 
-    private TextView textView_username, textView_phone, textView_email, textView_dNumber;
+    private TextView textView_username, textView_gender, textView_phone, textView_email, textView_dNumber, textView_birthday;
     private Button button_update;
 
     private SharedPreferences sharedPreferences;
@@ -40,6 +40,8 @@ public class MyInformationActivity extends AppCompatActivity {
 
     private void init() {
         textView_username = findViewById(R.id.tv_mi_name);
+        textView_gender = findViewById(R.id.tv_mi_gender);
+        textView_birthday = findViewById(R.id.tv_mi_birthday);
         textView_email = findViewById(R.id.tv_mi_email);
         textView_phone = findViewById(R.id.tv_mi_phone);
         textView_dNumber = findViewById(R.id.tv_mi_diagnosisNumber);
@@ -47,6 +49,8 @@ public class MyInformationActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
         textView_username.setText("姓名：" + sharedPreferences.getString("username", ""));
+        textView_gender.setText("性别：" + sharedPreferences.getString("gender", ""));
+        textView_birthday.setText("生日：" + sharedPreferences.getString("birthday", ""));
         textView_phone.setText("手机：" + sharedPreferences.getString("userPhone", ""));
         textView_email.setText("邮箱：" + sharedPreferences.getString("userEmail", ""));
         textView_dNumber.setText("诊察号：" + sharedPreferences.getString("diagnosisNumber", ""));

@@ -47,7 +47,7 @@
                 android:id="@+id/ll_ami_surface"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
+                android:gravity="left"
                 android:orientation="vertical">
 
                 <TextView
@@ -55,6 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
                     android:text="2020-11-31"
                     android:textColor="@color/blueviolet"
                     android:textSize="25dp" />
@@ -64,7 +65,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
                     android:text="25:00-26:00"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_ami_hospital"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:text="中山医院"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -74,6 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="15dp"
                     android:text="选择牙齿疾病类型"
                     android:textColor="@color/red"
                     android:textSize="20sp" />

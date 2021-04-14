@@ -53,6 +53,7 @@ public class UserListActivity extends AppCompatActivity {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 userImpl.clear();
+                                appointmentInfoImpl.clear();
                                 Intent intent = new Intent(UserListActivity.this, UserListActivity.class);
                                 startActivity(intent);
                             }

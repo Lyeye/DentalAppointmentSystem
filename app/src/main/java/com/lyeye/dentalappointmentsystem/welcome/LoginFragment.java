@@ -28,6 +28,8 @@ import com.lyeye.dentalappointmentsystem.impl.AdministratorImpl;
 import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
+import java.text.SimpleDateFormat;
+
 
 public class LoginFragment extends Fragment {
 
@@ -84,6 +86,7 @@ public class LoginFragment extends Fragment {
                             sp_editor.putString("gender", userByEmail.getUserGender());
                             sp_editor.putString("affiliatedHospital", userByEmail.getAffiliatedHospital());
                             sp_editor.putString("diagnosisNumber", userByEmail.getDiagnosisNumber());
+                            sp_editor.putString("birthday", new SimpleDateFormat("yyyy年MM月dd日").format(userByEmail.getUserBirthday()));
                             sp_editor.apply();
                             Log.d(null, "loginUser affiliatedHospital: " + sharedPreferences.getString("affiliatedHospital", ""));
                             startActivity(intent);

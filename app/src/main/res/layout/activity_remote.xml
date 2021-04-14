@@ -4,30 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg_sunshine"
+    android:background="@mipmap/bg_beauty"
     tools:context=".remote.RemoteActivity">
 
-    <TextureView
-        android:id="@+id/textureView_remote_patient"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="600dp"/>
+        android:layout_height="match_parent">
+
+        <TextureView
+            android:id="@+id/textureView_remote_patient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <TextureView
         android:id="@+id/textureView_remote_doctor"
-        android:layout_width="150dp"
-        android:layout_height="200dp" />
+        android:layout_width="120dp"
+        android:layout_height="150dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:layout_below="@+id/textureView_remote_patient">
+        android:layout_marginTop="600dp"
+        android:gravity="center">
+
         <ImageView
             android:id="@+id/iv_remote_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/ic_hand_up"
-            android:text="挂断">
-        </ImageView>
+            android:text="挂断"></ImageView>
     </LinearLayout>
 
 </RelativeLayout>

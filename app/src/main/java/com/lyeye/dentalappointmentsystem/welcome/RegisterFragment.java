@@ -92,7 +92,8 @@ public class RegisterFragment extends Fragment {
                         textView_birthday.setText(format_birthday);
                         birthday = date;
                     }
-                }).setTitleText("选择您的生日").setCancelText("取消").setSubmitText("确定").isCyclic(true).setRangDate(startCalendar, endCalendar).build();
+                }).setTitleText("选择您的生日").setCancelText("取消").setSubmitText("确定").isCyclic(true)
+                        .setRangDate(startCalendar, endCalendar).build();
                 timePickerView_birthday.show();
             }
         });

@@ -57,11 +57,13 @@ public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<Recycle
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
 
-        ((AmRecyclerViewHolder) holder).textView_am_date.setText(scheduleList.get(position).getAmiDate());
+        ((AmRecyclerViewHolder) holder).textView_am_date.setText("日期：" + scheduleList.get(position).getAmiDate());
 
-        ((AmRecyclerViewHolder) holder).textView_am_time.setText(scheduleList.get(position).getAmiTime());
+        ((AmRecyclerViewHolder) holder).textView_am_time.setText("时间：" + scheduleList.get(position).getAmiTime());
 
-        ((AmRecyclerViewHolder) holder).textView_am_symptoms.setText(scheduleList.get(position).getAmiSymptoms());
+        ((AmRecyclerViewHolder) holder).textView_am_hospital.setText("医院：" + scheduleList.get(position).getAffiliatedHospital());
+
+        ((AmRecyclerViewHolder) holder).textView_am_symptoms.setText("类型：" + scheduleList.get(position).getAmiSymptoms());
 
         String amiDate = scheduleList.get(position).getAmiDate();
         String amiTime = scheduleList.get(position).getAmiTime();
@@ -105,6 +107,7 @@ public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<Recycle
 
         private TextView textView_am_date;
         private TextView textView_am_time;
+        private TextView textView_am_hospital;
         private TextView textView_am_symptoms;
         private TextView textView_am_delete;
         private SwipeLayout swipeLayout;
@@ -113,6 +116,7 @@ public class AppointmentRecyclerViewAdapter extends RecyclerSwipeAdapter<Recycle
             super(itemView);
             textView_am_date = itemView.findViewById(R.id.tv_ami_date);
             textView_am_time = itemView.findViewById(R.id.tv_ami_time);
+            textView_am_hospital = itemView.findViewById(R.id.tv_ami_hospital);
             textView_am_symptoms = itemView.findViewById(R.id.tv_ami_symptoms);
             textView_am_delete = itemView.findViewById(R.id.tv_ami_delete);
             swipeLayout = itemView.findViewById(R.id.sl_ami_swipelayout);

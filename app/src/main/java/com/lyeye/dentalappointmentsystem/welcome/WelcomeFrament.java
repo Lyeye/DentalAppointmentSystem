@@ -19,12 +19,15 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
+import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 
 public class WelcomeFrament extends Fragment {
 
     private LoginFragment loginFragment;
     private SharedPreferences sharedPreferences;
     private String userEmail;
+    private UserImpl userImpl;
+    private WelcomeActivity welcomeActivity;
 
     private Button button_welcome;
     private TextView textView_change_user;
@@ -40,15 +43,17 @@ public class WelcomeFrament extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        welcomeActivity = (WelcomeActivity) getActivity();
+        userImpl = new UserImpl(welcomeActivity);
         button_welcome = view.findViewById(R.id.btn_fw_start);
         button_welcome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 button_welcome.setText("正在登录，请稍等...");
-                WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
+
                 sharedPreferences = welcomeActivity.getSharedPreferences("user_info", Context.MODE_PRIVATE);
                 userEmail = sharedPreferences.getString("userEmail", "");
-                if (userEmail == "") {
+                if (userEmail == "" || userImpl.findUserByEmail(userEmail) == null) {
                     loginFragment = new LoginFragment();
                     FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

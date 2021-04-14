@@ -49,6 +49,28 @@
                 android:textSize="20dp"></TextView>
 
             <TextView
+                android:id="@+id/tv_mi_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="left"
+                android:text="性别"
+                android:textColor="@color/black"
+                android:textSize="20dp"></TextView>
+
+            <TextView
+                android:id="@+id/tv_mi_birthday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="left"
+                android:text="生日"
+                android:textColor="@color/black"
+                android:textSize="20dp"></TextView>
+
+            <TextView
                 android:id="@+id/tv_mi_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

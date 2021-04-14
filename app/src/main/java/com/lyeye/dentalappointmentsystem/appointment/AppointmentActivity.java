@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -25,8 +24,7 @@ import java.util.List;
 public class AppointmentActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private TextView textView_flush;
-    private ImageView imageView_appointment;
+    private TextView textView_appointment;
 
     private List<AppointmentInfo> appointmentScheduleList = new ArrayList<AppointmentInfo>();
     private SharedPreferences sharedPreferences;
@@ -44,14 +42,7 @@ public class AppointmentActivity extends AppCompatActivity {
         initRecyclerView();
 
         /*刷新按钮*/
-        textView_flush.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initRecyclerView();
-            }
-        });
-
-        imageView_appointment.setOnClickListener(new View.OnClickListener() {
+        textView_appointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AppointmentActivity.this, AppointmentDetailActivity.class);
@@ -63,8 +54,7 @@ public class AppointmentActivity extends AppCompatActivity {
     private void init() {
 
         recyclerView = findViewById(R.id.rv_am_appointment_info);
-        textView_flush = findViewById(R.id.tv_am_reflesh);
-        imageView_appointment = findViewById(R.id.iv_am_add);
+        textView_appointment = findViewById(R.id.tv_am_appointment);
 
         appointmentInfoImpl = new AppointmentInfoImpl(AppointmentActivity.this);
 

@@ -10,32 +10,13 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="      我的预约"
-                android:textSize="45dp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:layout_weight="0.1"
-                android:layout_gravity="center">
-            </TextView>
-            <ImageView
-                android:id="@+id/iv_am_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="15dp"
-                android:background="@mipmap/ic_addappointment">
-            </ImageView>
-        </LinearLayout>
+            android:layout_gravity="center"
+            android:text="我的预约"
+            android:textColor="@color/black"
+            android:textSize="25dp" />
 
         <View
             android:layout_width="match_parent"
@@ -45,10 +26,12 @@
             android:background="@color/black" />
 
         <TextView
-            android:id="@+id/tv_am_reflesh"
+            android:id="@+id/tv_am_appointment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="刷新"
+            android:text="前往预约"
+            android:textSize="20dp"
+            android:textStyle="italic"
             android:textColor="@color/skyblue" />
 
         <androidx.recyclerview.widget.RecyclerView

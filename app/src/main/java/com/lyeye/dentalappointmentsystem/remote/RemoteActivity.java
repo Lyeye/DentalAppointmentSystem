@@ -74,5 +74,4 @@ public class RemoteActivity extends AppCompatActivity {
         /** 销毁 SDK */
         ZegoExpressEngine.destroyEngine(null);
     }
-    
 }

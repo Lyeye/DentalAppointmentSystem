@@ -40,8 +40,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:hint="请输入房间名">
-                </EditText>
+                    android:hint="请输入房间名"
+                    android:text="123"></EditText>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,13 +56,14 @@
                     android:textStyle="bold"
                     android:text="推流名：">
                 </TextView>
+
                 <EditText
                     android:id="@+id/et_jr_stream"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:hint="请输入推流名">
-                </EditText>
+                    android:hint="请输入推流名"
+                    android:text="user"></EditText>
             </LinearLayout>
             <Button
                 android:id="@+id/btn_jr_join"
