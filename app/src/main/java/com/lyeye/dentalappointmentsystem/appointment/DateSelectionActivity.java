@@ -14,7 +14,7 @@ import com.haibin.calendarview.CalendarView;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;

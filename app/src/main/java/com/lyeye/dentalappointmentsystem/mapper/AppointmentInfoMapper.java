@@ -17,4 +17,6 @@ public interface AppointmentInfoMapper {
     void insertAppointmentInfo(AppointmentInfo appointmentInfo);
 
     void deleteAppointmentInfo(AppointmentInfo appointmentInfo);
+
+    void clear();
 }

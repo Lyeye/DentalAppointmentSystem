@@ -14,7 +14,11 @@ public interface UserMapper {
 
     User findUserByDiagnosisNumber(String diagnosisNumber);
 
+    void updateUser(User user);
+
     void insertUser(User user);
 
     void deleteUser(User user);
+
+    void clear();
 }

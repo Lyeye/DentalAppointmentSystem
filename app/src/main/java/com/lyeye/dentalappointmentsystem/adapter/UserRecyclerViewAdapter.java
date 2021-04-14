@@ -15,8 +15,7 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.administration.UserAppointmentActivity;
 import com.lyeye.dentalappointmentsystem.entity.User;
-import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
-import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
+import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
 import java.text.SimpleDateFormat;

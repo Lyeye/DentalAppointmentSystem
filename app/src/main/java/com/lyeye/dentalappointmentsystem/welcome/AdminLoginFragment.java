@@ -19,10 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.administration.UserListActivity;
 import com.lyeye.dentalappointmentsystem.entity.Administrator;
-import com.lyeye.dentalappointmentsystem.entity.User;
-import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.mapper.AdministratorImpl;
-import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
+import com.lyeye.dentalappointmentsystem.impl.AdministratorImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
 

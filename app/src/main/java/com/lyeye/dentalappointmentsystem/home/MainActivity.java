@@ -42,9 +42,10 @@ import com.lyeye.dentalappointmentsystem.entity.Hospital;
 import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.family.MyFamilyActivity;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
-import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
-import com.lyeye.dentalappointmentsystem.mapper.HospitalImpl;
-import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
+import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.impl.HospitalImpl;
+import com.lyeye.dentalappointmentsystem.impl.UserImpl;
+import com.lyeye.dentalappointmentsystem.information.MyInformationActivity;
 import com.lyeye.dentalappointmentsystem.notice.NoticeActivity;
 import com.lyeye.dentalappointmentsystem.scan.ScanActivity;
 import com.lyeye.dentalappointmentsystem.remote.JoinRoomActivity;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button button_register, button_appointment, button_myfamily, button_notice, button_camera, button_remote;
     private TextView textView_username, textView_gender, textView_affiliatedHospital, textView_diagnosisNumber;
     private RecyclerView recyclerView_appointmentInfo;
-    private ImageView imageView_userPhoto;
+    private ImageView imageView_userPhoto, imageView_userInfo;
     private String paths;
     private SharedPreferences sharedPreferences;
     private Editor editor;
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView_diagnosisNumber = findViewById(R.id.tv_main_diagnosisNumber);
         recyclerView_appointmentInfo = findViewById(R.id.rv_main_appointmentInfo);
         imageView_userPhoto = findViewById(R.id.iv_main_userPhoto);
+        imageView_userInfo = findViewById(R.id.iv_main_userInfo);
 
         userImpl = new UserImpl(MainActivity.this);
         appointmentInfoImpl = new AppointmentInfoImpl(MainActivity.this);
@@ -199,12 +201,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_camera.setOnClickListener(this);
         button_remote.setOnClickListener(this);
         imageView_userPhoto.setOnClickListener(this);
+        imageView_userInfo.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
+            case R.id.iv_main_userInfo:
+                startActivity(new Intent(MainActivity.this, MyInformationActivity.class));
+                break;
             case R.id.iv_main_userPhoto:
                 if (Build.VERSION.SDK_INT >= 23) {
                     int check1 = ContextCompat.checkSelfPermission(MainActivity.this, permissions[0]);

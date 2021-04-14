@@ -15,15 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.appointment.AppointmentDetailActivity;
-import com.lyeye.dentalappointmentsystem.appointment.DateSelectionActivity;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
-import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
+import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.mapper;
+package com.lyeye.dentalappointmentsystem.impl;
 
 import android.content.Context;
 
@@ -6,6 +6,7 @@ import com.lyeye.dentalappointmentsystem.entity.Administrator;
 import com.lyeye.dentalappointmentsystem.greendao.AdministratorDao;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
 import com.lyeye.dentalappointmentsystem.greendao.DaoSession;
+import com.lyeye.dentalappointmentsystem.mapper.AdministratorMapper;
 
 public class AdministratorImpl implements AdministratorMapper {
 

@@ -11,7 +11,7 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.adapter.NoticeRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.appointment.XLinearLayoutManager;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
-import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 
 import java.util.List;
 

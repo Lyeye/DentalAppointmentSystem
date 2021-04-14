@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.mapper;
+package com.lyeye.dentalappointmentsystem.impl;
 
 import android.content.Context;
 
@@ -7,6 +7,7 @@ import com.lyeye.dentalappointmentsystem.greendao.AppointmentInfoDao;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
 import com.lyeye.dentalappointmentsystem.greendao.DaoSession;
 import com.lyeye.dentalappointmentsystem.greendao.HospitalDao;
+import com.lyeye.dentalappointmentsystem.mapper.HospitalMapper;
 
 import java.util.List;
 

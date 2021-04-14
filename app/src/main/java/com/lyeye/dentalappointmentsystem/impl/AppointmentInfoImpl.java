@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.mapper;
+package com.lyeye.dentalappointmentsystem.impl;
 
 import android.content.Context;
 
@@ -6,6 +6,7 @@ import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.greendao.AppointmentInfoDao;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
 import com.lyeye.dentalappointmentsystem.greendao.DaoSession;
+import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoMapper;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -61,5 +62,10 @@ public class AppointmentInfoImpl implements AppointmentInfoMapper {
     @Override
     public void deleteAppointmentInfo(AppointmentInfo appointmentInfo) {
         appointmentInfoDao.delete(appointmentInfo);
+    }
+
+    @Override
+    public void clear() {
+        appointmentInfoDao.deleteAll();
     }
 }

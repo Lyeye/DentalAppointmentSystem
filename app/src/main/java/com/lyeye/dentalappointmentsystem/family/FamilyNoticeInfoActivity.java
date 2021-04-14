@@ -11,7 +11,7 @@ import com.lyeye.dentalappointmentsystem.adapter.FamilyNoticeRecyclerViewAdapter
 import com.lyeye.dentalappointmentsystem.appointment.XLinearLayoutManager;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.entity.User;
-import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 import com.lyeye.dentalappointmentsystem.util.UserLoginMessageEvent;
 
 import org.greenrobot.eventbus.EventBus;

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.adapter.AppointmentRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
-import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,16 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.adapter.UserAppointmentInfoRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.appointment.XLinearLayoutManager;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
-import com.lyeye.dentalappointmentsystem.mapper.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.mapper;
+package com.lyeye.dentalappointmentsystem.impl;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,6 +7,7 @@ import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
 import com.lyeye.dentalappointmentsystem.greendao.DaoSession;
 import com.lyeye.dentalappointmentsystem.greendao.UserDao;
+import com.lyeye.dentalappointmentsystem.mapper.UserMapper;
 
 import java.util.List;
 
@@ -50,6 +51,11 @@ public class UserImpl implements UserMapper {
     }
 
     @Override
+    public void updateUser(User user) {
+        userDao.update(user);
+    }
+
+    @Override
     public void insertUser(User user) {
         userDao.insert(user);
     }
@@ -57,5 +63,10 @@ public class UserImpl implements UserMapper {
     @Override
     public void deleteUser(User user) {
         userDao.delete(user);
+    }
+
+    @Override
+    public void clear() {
+        userDao.deleteAll();
     }
 }

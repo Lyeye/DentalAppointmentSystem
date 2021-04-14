@@ -24,8 +24,8 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.entity.Administrator;
 import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.mapper.AdministratorImpl;
-import com.lyeye.dentalappointmentsystem.mapper.UserImpl;
+import com.lyeye.dentalappointmentsystem.impl.AdministratorImpl;
+import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
 
@@ -77,6 +77,7 @@ public class LoginFragment extends Fragment {
                             sharedPreferences = welcomeActivity.getSharedPreferences("user_info", Context.MODE_PRIVATE);
                             sp_editor = sharedPreferences.edit();
                             sp_editor.putString("userEmail", userByEmail.getUserEmail());
+                            sp_editor.putString("userPhone", userByEmail.getUserPhoneNumber());
                             sp_editor.putLong("userId", userByEmail.getUserId());
                             sp_editor.putString("username", userByEmail.getUserName());
                             sp_editor.putString("password", userByEmail.getUserPwd());

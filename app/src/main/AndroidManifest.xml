@@ -38,7 +38,8 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
-        <activity android:name=".information.MyInformationActivity"></activity>
+        <activity android:name=".information.UpdateInformationActivity"></activity>
+        <activity android:name=".information.MyInformationActivity" />
         <activity android:name=".administration.UserAppointmentActivity" />
         <activity android:name=".administration.UserListActivity" />
         <activity android:name=".scan.RegistrationResultActivity" />
