@@ -21,7 +21,7 @@ public class HospitalImpl implements HospitalMapper {
     public HospitalImpl(Context context) {
         this.context = context;
         daoManager = DaoManager.getInstance();
-        daoManager.initGreenDao(context, "DentalAppoitmentSystem");
+        daoManager.initGreenDao(context, "DentalAppointmentSystem");
         daoSession = daoManager.getDaoSession();
         hospitalDao = daoSession.getHospitalDao();
     }

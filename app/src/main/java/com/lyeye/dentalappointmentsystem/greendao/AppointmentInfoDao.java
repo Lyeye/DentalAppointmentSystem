@@ -2,7 +2,6 @@ package com.lyeye.dentalappointmentsystem.greendao;
 
 import java.util.List;
 import java.util.ArrayList;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 
@@ -282,7 +281,7 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
         }
         return list;
     }
-
+    
     protected List<AppointmentInfo> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
@@ -292,12 +291,10 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
     }
 
 
-    /**
-     * A raw-style query where you can pass any WHERE clause and arguments.
-     */
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
     public List<AppointmentInfo> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }
-
+ 
 }

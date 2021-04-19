@@ -21,7 +21,7 @@ public class AppointmentInfoImpl implements AppointmentInfoMapper {
     public AppointmentInfoImpl(Context context) {
         this.context = context;
         daoManager = DaoManager.getInstance();
-        daoManager.initGreenDao(context, "DentalAppoitmentSystem");
+        daoManager.initGreenDao(context, "DentalAppointmentSystem");
         daoSession = daoManager.getDaoSession();
         appointmentInfoDao = daoSession.getAppointmentInfoDao();
     }

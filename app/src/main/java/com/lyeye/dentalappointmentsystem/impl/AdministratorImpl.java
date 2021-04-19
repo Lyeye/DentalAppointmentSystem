@@ -18,7 +18,7 @@ public class AdministratorImpl implements AdministratorMapper {
     public AdministratorImpl(Context context) {
         this.context = context;
         daoManager = DaoManager.getInstance();
-        daoManager.initGreenDao(context, "DentalAppoitmentSystem");
+        daoManager.initGreenDao(context, "DentalAppointmentSystem");
         daoSession = daoManager.getDaoSession();
         administratorDao = daoSession.getAdministratorDao();
     }
