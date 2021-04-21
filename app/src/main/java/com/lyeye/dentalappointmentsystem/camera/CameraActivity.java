@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -29,7 +30,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private static int REQUEST_CAMERA = 1;
     private static int IMAGE_REQUEST_CODE = 2;
-    private Button button_takephotofromassets, button_takephotowithcamera;
+    private Button button_takePhotoFromAssets, button_takePhotoWithCamera;
+    private TextView textView_upload;
     private ImageView imageView_photo;
     private File file;
     private String paths;
@@ -39,13 +41,14 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        button_takephotowithcamera = findViewById(R.id.btn_camera_takephotoswithcamera);
-        button_takephotofromassets = findViewById(R.id.btn_camera_takephotosfromassets);
-        imageView_photo = findViewById(R.id.iv_camera_takephotos);
+        button_takePhotoWithCamera = findViewById(R.id.btn_camera_takephotoswithcamera);
+        button_takePhotoFromAssets = findViewById(R.id.btn_camera_takePhotosFromAssets);
+        imageView_photo = findViewById(R.id.iv_camera_takePhotos);
+        textView_upload = findViewById(R.id.tv_camera_upload);
 
         icon();
 
-        button_takephotowithcamera.setOnClickListener(new View.OnClickListener() {
+        button_takePhotoWithCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -68,12 +71,23 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
-        button_takephotofromassets.setOnClickListener(new View.OnClickListener() {
+        button_takePhotoFromAssets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /*在这里跳转到手机系统相册里面*/
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, IMAGE_REQUEST_CODE);
+            }
+        });
+
+        textView_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (file == null && paths == null) {
+                    ToastUtil.showMsg(CameraActivity.this, "请先选择照片！！");
+                } else {
+                    textView_upload.setText("上传成功");
+                }
             }
         });
     }
@@ -138,11 +152,11 @@ public class CameraActivity extends AppCompatActivity {
     private void icon() {
         Drawable drawable_takePhotoWithCamera = getResources().getDrawable(R.mipmap.ic_takephotos);
         drawable_takePhotoWithCamera.setBounds(0, 0, 100, 100);
-        button_takephotowithcamera.setCompoundDrawables(null, drawable_takePhotoWithCamera, null, null);
+        button_takePhotoWithCamera.setCompoundDrawables(null, drawable_takePhotoWithCamera, null, null);
 
         Drawable drawable_takePhotoFromAlbum = getResources().getDrawable(R.mipmap.ic_album);
         drawable_takePhotoFromAlbum.setBounds(0, 0, 100, 100);
-        button_takephotofromassets.setCompoundDrawables(null, drawable_takePhotoFromAlbum, null, null);
+        button_takePhotoFromAssets.setCompoundDrawables(null, drawable_takePhotoFromAlbum, null, null);
 
     }
 }

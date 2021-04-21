@@ -36,9 +36,9 @@ public class MyFamilyAppointmentRecyclerViewAdapter extends RecyclerView.Adapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_date.setText(scheduleList.get(position).getAmiDate());
-        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_time.setText(scheduleList.get(position).getAmiTime());
-        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_symptoms.setText(scheduleList.get(position).getAmiSymptoms());
+        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_date.setText("预约日期：" + scheduleList.get(position).getAmiDate());
+        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_time.setText("预约时间：" + scheduleList.get(position).getAmiTime());
+        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_symptoms.setText("预约类型：" + scheduleList.get(position).getAmiSymptoms());
     }
 
     @Override

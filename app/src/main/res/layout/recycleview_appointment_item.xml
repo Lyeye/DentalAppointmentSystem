@@ -30,16 +30,18 @@
 
                 <TextView
                     android:id="@+id/tv_ami_delete"
-                    android:layout_width="60dp"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="250dp"
+                    android:layout_marginLeft="100dp"
                     android:background="@color/red"
                     android:elevation="10dp"
                     android:ems="1"
+                    android:maxEms="1"
                     android:gravity="center"
                     android:text="取消预约"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
             </LinearLayout>
 
             <!--SurfaceView-->

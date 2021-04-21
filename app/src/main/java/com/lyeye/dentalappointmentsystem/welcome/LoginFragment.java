@@ -69,7 +69,12 @@ public class LoginFragment extends Fragment {
                 userImpl = new UserImpl(welcomeActivity);
                 ToastUtil.showMsg(welcomeActivity, "正在登录...");
                 if (editText_userEmail.getText().toString().length() == 0 || editText_pwd.getText().toString().length() == 0) {
-                    ToastUtil.showMsg(welcomeActivity, "用户邮箱或密码不能为空!");
+                    if (editText_userEmail.getText().toString().length() == 0) {
+                        editText_userEmail.setHint("用户邮箱不能为空！");
+                    }
+                    if (editText_pwd.getText().toString().length() == 0) {
+                        editText_pwd.setHint("用户密码不能为空！");
+                    }
                 } else {
                     if (userImpl.findUserByEmail(editText_userEmail.getText().toString()) != null) {
                         User userByEmail = userImpl.findUserByEmail(editText_userEmail.getText().toString());
@@ -95,7 +100,7 @@ public class LoginFragment extends Fragment {
                             ToastUtil.showMsg(welcomeActivity, "密码错误！");
                         }
                     } else {
-                        ToastUtil.showMsg(welcomeActivity, "邮箱错误！");
+                        ToastUtil.showMsg(welcomeActivity, "改账号不存在！");
                     }
                 }
             }

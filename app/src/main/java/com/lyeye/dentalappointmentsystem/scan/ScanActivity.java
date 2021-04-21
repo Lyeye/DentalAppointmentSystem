@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +19,8 @@ import com.huawei.hms.ml.scan.HmsScan;
 import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
+
+import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -93,45 +96,81 @@ public class ScanActivity extends Activity implements ActivityCompat.OnRequestPe
         if (requestCode == REQUEST_CODE_SCAN_ONE) {
             HmsScan obj = data.getParcelableExtra(ScanUtil.RESULT);
             if (SELETE_CODE == 0) {
-                SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ScanActivity.this);
-                sweetAlertDialog.setTitleText("签到结果")
-                        .setContentText(obj.showResult)
-                        .setConfirmText("返回首页")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                Intent intent = new Intent(ScanActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }).setCancelText("重新扫描")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
-                        })
-                        .show();
+                Log.d(null, "obj.showResult: " + obj.showResult);
+                if (obj.showResult.contains("医院")) {
+                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ScanActivity.this, SweetAlertDialog.SUCCESS_TYPE);
+                    sweetAlertDialog.setTitleText("签到成功")
+                            .setContentText("目前所在的医院为" + obj.showResult)
+                            .setConfirmText("返回首页")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    Intent intent = new Intent(ScanActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            }).setCancelText("重新扫描")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ScanActivity.this, SweetAlertDialog.WARNING_TYPE);
+                    sweetAlertDialog.setContentText("请扫描医院提供的登记码").setCancelText("重新扫描").setConfirmText("返回")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            })
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    requestPermission(CAMERA_REQ_CODE, DECODE);
+                                }
+                            }).show();
+                }
             } else if (SELETE_CODE == 1) {
-                SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ScanActivity.this);
-                sweetAlertDialog
-                        .setTitleText("确认支付？")
-                        .setContentText("您需要支付" + obj.showResult)
-                        .setConfirmText("确认")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                Intent intent = new Intent(ScanActivity.this, PayResultActivity.class);
-                                startActivity(intent);
-                            }
-                        })
-                        .setCancelText("取消")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
-                        })
-                        .show();
+                if (isNumeric(obj.showResult)) {
+                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ScanActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE);
+                    sweetAlertDialog
+                            .setTitleText("确认支付？")
+                            .setCustomImage(R.mipmap.ic_paypay)
+                            .setContentText("您需要支付" + obj.showResult + "大洋")
+                            .setConfirmText("确认")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    Intent intent = new Intent(ScanActivity.this, PayResultActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setCancelText("取消")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ScanActivity.this, SweetAlertDialog.WARNING_TYPE);
+                    sweetAlertDialog.setContentText("请扫描正确的收款码").setCancelText("重新扫描").setConfirmText("返回")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            })
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    requestPermission(CAMERA_REQ_CODE, DECODE);
+                                }
+                            }).show();
+                }
             }
         }
     }
@@ -144,5 +183,10 @@ public class ScanActivity extends Activity implements ActivityCompat.OnRequestPe
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public static boolean isNumeric(String str) {
+        Pattern pattern = Pattern.compile("[0-9]*");
+        return pattern.matcher(str).matches();
     }
 }

@@ -289,7 +289,7 @@ public class AppointmentInfoDao extends AbstractDao<AppointmentInfo, Long> {
             cursor.close();
         }
     }
-
+    
 
     /** A raw-style query where you can pass any WHERE clause and arguments. */
     public List<AppointmentInfo> queryDeep(String where, String... selectionArg) {

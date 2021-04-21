@@ -41,34 +41,34 @@ public class AppointmentDetailActivity extends AppCompatActivity {
                 }
             }
         });
-        button_serious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView_level.setText("严重");
-                textView_level.setBackground(getResources().getDrawable(R.color.red));
-            }
-        });
-        button_medium.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView_level.setText("中度");
-                textView_level.setBackground(getResources().getDrawable(R.color.orange));
-            }
-        });
-        button_light.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView_level.setText("轻度");
-                textView_level.setBackground(getResources().getDrawable(R.color.yellow));
-            }
-        });
-        button_unimportant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView_level.setText("轻微");
-                textView_level.setBackground(getResources().getDrawable(R.color.greenyellow));
-            }
-        });
+//        button_serious.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                textView_level.setText("严重");
+//                textView_level.setBackground(getResources().getDrawable(R.color.red));
+//            }
+//        });
+//        button_medium.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                textView_level.setText("中度");
+//                textView_level.setBackground(getResources().getDrawable(R.color.orange));
+//            }
+//        });
+//        button_light.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                textView_level.setText("轻度");
+//                textView_level.setBackground(getResources().getDrawable(R.color.yellow));
+//            }
+//        });
+//        button_unimportant.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                textView_level.setText("轻微");
+//                textView_level.setBackground(getResources().getDrawable(R.color.greenyellow));
+//            }
+//        });
     }
 
     @Override
@@ -98,10 +98,10 @@ public class AppointmentDetailActivity extends AppCompatActivity {
         editText_describe = findViewById(R.id.et_ad_describe);
         textView_hint = findViewById(R.id.tv_ad_hint);
         textView_appointment = findViewById(R.id.tv_ad_appointment);
-        textView_level = findViewById(R.id.tv_ad_level);
-        button_serious = findViewById(R.id.btn_ad_serious);
-        button_medium = findViewById(R.id.btn_ad_medium);
-        button_light = findViewById(R.id.btn_ad_light);
-        button_unimportant = findViewById(R.id.btn_ad_unimportant);
+//        textView_level = findViewById(R.id.tv_ad_level);
+//        button_serious = findViewById(R.id.btn_ad_serious);
+//        button_medium = findViewById(R.id.btn_ad_medium);
+//        button_light = findViewById(R.id.btn_ad_light);
+//        button_unimportant = findViewById(R.id.btn_ad_unimportant);
     }
 }

@@ -20,6 +20,7 @@ import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.remote.JoinRoomActivity;
+import com.lyeye.dentalappointmentsystem.scan.ScanActivity;
 import com.lyeye.dentalappointmentsystem.welcome.WelcomeActivity;
 
 import java.util.List;
