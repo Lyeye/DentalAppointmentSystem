@@ -25,19 +25,43 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:cardCornerRadius="4dp"
             app:cardElevation="10dp"
             app:cardUseCompatPadding="true">
 
-            <TextView
-                android:id="@+id/tv_notice_notice"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
-                android:textSize="15dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_notice_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="1111111111111111111111111111111"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:id="@+id/tv_notice_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="right"
+                    android:textColor="@color/skyblue"
+                    android:textStyle="italic"
+                    android:text="222"
+                    android:textSize="20dp"></TextView>
+            </LinearLayout>
+
 
         </androidx.cardview.widget.CardView>
 

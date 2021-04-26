@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,20 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
+import com.lyeye.dentalappointmentsystem.util.UrlUtil;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class UpdateInformationActivity extends AppCompatActivity {
 
@@ -21,9 +36,8 @@ public class UpdateInformationActivity extends AppCompatActivity {
     private Button button_update;
 
     private SharedPreferences sharedPreferences;
-    private Editor editor;
-    private UserImpl userImpl;
-    private User user;
+    private int userId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,40 +47,45 @@ public class UpdateInformationActivity extends AppCompatActivity {
         init();
 
         button_update.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                if (editText_username.getText().toString().length() == 0
-                        && editText_phone.getText().toString().length() == 0
-                        && editText_email.getText().toString().length() == 0) {
+
+                String name = editText_username.getText().toString();
+                String email = editText_email.getText().toString();
+                String phone = editText_phone.getText().toString();
+                Log.d(null, "name: " + name);
+
+                Intent intent = getIntent();
+                String oldName = intent.getStringExtra("name");
+                String oldEmail = intent.getStringExtra("email");
+                String oldPhone = intent.getStringExtra("phone");
+                String gender = intent.getStringExtra("gender");
+                String number = intent.getStringExtra("number");
+                String password = intent.getStringExtra("password");
+                String birthday = intent.getStringExtra("birthday");
+                String createAt = intent.getStringExtra("createAt");
+                String type = intent.getStringExtra("type");
+
+                if (name.length() == 0 && phone.length() == 0 && email.length() == 0) {
                     ToastUtil.showMsg(UpdateInformationActivity.this, "请输入内容");
                 } else {
-                    if (editText_username.getText().toString().length() != 0) {
-                        user.setUserName(editText_username.getText().toString());
-                        userImpl.updateUser(user);
-                        editor.putString("username", editText_username.getText().toString()).apply();
+                    if (name.length() != 0) {
+                        update(name, gender, oldEmail, password, oldPhone, number, birthday, createAt, type);
                     }
 
-                    if (editText_phone.getText().toString().length() != 0) {
-                        if (isMobile(editText_phone.getText().toString())) {
-                            user.setUserPhoneNumber(editText_phone.getText().toString());
-                            userImpl.updateUser(user);
-                            editor.putString("userPhone", editText_phone.getText().toString()).apply();
+                    if (phone.length() != 0) {
+                        if (isMobile(phone)) {
+                            update(oldName, gender, oldEmail, password, phone, number, birthday, createAt, type);
                         } else {
                             ToastUtil.showMsg(UpdateInformationActivity.this, "手机号格式不正确");
                         }
 
                     }
 
-                    if (editText_email.getText().toString().length() != 0) {
-
-                        if (isEmail(editText_email.getText().toString())) {
-                            if (userImpl.findUserByEmail(editText_email.getText().toString()) == null) {
-                                user.setUserEmail(editText_email.getText().toString());
-                                userImpl.updateUser(user);
-                                editor.putString("userEmail", editText_email.getText().toString()).apply();
-                            } else {
-                                ToastUtil.showMsg(UpdateInformationActivity.this, "邮箱已存在！");
-                            }
+                    if (email.length() != 0) {
+                        if (isEmail(email)) {
+                            update(oldName, gender, email, password, oldPhone, number, birthday, createAt, type);
                         } else {
                             ToastUtil.showMsg(UpdateInformationActivity.this, "邮箱格式不正确");
                         }
@@ -84,10 +103,42 @@ public class UpdateInformationActivity extends AppCompatActivity {
         editText_email = findViewById(R.id.et_ui_email);
         button_update = findViewById(R.id.btn_ui_update);
 
-        sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        userImpl = new UserImpl(this);
-        user = userImpl.findUserById(sharedPreferences.getLong("userId", 999999999));
+        sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
+        userId = sharedPreferences.getInt("userId", 999999999);
+        Log.d(null, "userId: " + userId);
+
+
+    }
+
+    private void update(String name, String gender, String email, String password, String phone, String number, String birthday, String createAt, String type) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String json = "{\n" +
+                            "\t\"id\":\"" + userId + "\",\n" +
+                            "\t\"name\":\"" + name + "\",\n" +
+                            "\t\"gender\":\"" + gender + "\",\n" +
+                            "\t\"email\":\"" + email + "\",\n" +
+                            "\t\"password\":\"" + password + "\",\n" +
+                            "\t\"phone\":\"" + phone + "\",\n" +
+                            "\t\"number\":\"" + number + "\",\n" +
+                            "\t\"birthday\":\"" + birthday + "\",\n" +
+                            "\t\"createAt\":\"" + createAt + "\",\n" +
+                            "\t\"type\":\"" + type + "\"\n" +
+                            "}";
+                    Log.d(null, "json: " + json);
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(UrlUtil.getURL("updateMyInfo?userId=" + userId))
+                            .post(RequestBody.create(MediaType.parse("application/json"), json))
+                            .build();
+                    okHttpClient.newCall(request).execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /*

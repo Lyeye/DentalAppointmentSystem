@@ -148,7 +148,7 @@ public class CameraActivity extends AppCompatActivity {
 
     /*
     调整图标大小
-*/
+    */
     private void icon() {
         Drawable drawable_takePhotoWithCamera = getResources().getDrawable(R.mipmap.ic_takephotos);
         drawable_takePhotoWithCamera.setBounds(0, 0, 100, 100);

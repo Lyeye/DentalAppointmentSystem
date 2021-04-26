@@ -1,21 +1,17 @@
 package com.lyeye.dentalappointmentsystem.appointment;
 
-import android.app.Dialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 
@@ -25,7 +21,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -38,36 +33,24 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+public class TimeSelectActivity extends AppCompatActivity {
 
-public class TimeSelectDialog extends Dialog {
-
-    private TextView textView_cancel;
+    private TextView textView_cancel, textView_date;
     private Button button1, button2, button3, button4, button5, button6, button7, button8;
-
 
     private ArrayList<Button> buttons = new ArrayList<>();
 
-    private Context context;
     private String dateSelected;
     private String symptom, level, remote, hospitalName, userName;
     private int userId, hospitalId;
     private List<String> hasAppointmentTimes = new ArrayList<>();
     private SharedPreferences sharedPreferences;
 
-    public TimeSelectDialog(@NonNull Context context, int themeResId, String dateSelected, String symptom, String level, String remote, List<String> hasAppointmentTimes) {
-        super(context, themeResId);
-        this.context = context;
-        this.dateSelected = dateSelected;
-        this.symptom = symptom;
-        this.level = level;
-        this.remote = remote;
-        this.hasAppointmentTimes = hasAppointmentTimes;
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_time_select);
 
         init();
 
@@ -77,7 +60,7 @@ public class TimeSelectDialog extends Dialog {
                 @Override
                 public void onClick(View v) {
                     String time = button.getText().toString();
-                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(context);
+                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(TimeSelectActivity.this);
                     sweetAlertDialog.setTitleText(dateSelected)
                             .setContentText("确定预约" + time + "吗？")
                             .setConfirmText("预约").setCancelText("我再想想")
@@ -123,15 +106,15 @@ public class TimeSelectDialog extends Dialog {
                                             }
                                         }
                                     }).start();
-                                    Intent intent = new Intent(context, AppointmentActivity.class);
-                                    context.startActivity(intent);
+                                    Intent intent = new Intent(TimeSelectActivity.this, AppointmentActivity.class);
+                                    startActivity(intent);
                                 }
                             })
                             .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     sweetAlertDialog.cancel();
-                                    ToastUtil.showMsg(context, "已取消");
+                                    ToastUtil.showMsg(TimeSelectActivity.this, "已取消");
                                 }
                             })
                             .show();
@@ -142,27 +125,26 @@ public class TimeSelectDialog extends Dialog {
         textView_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AppointmentDetailActivity.class);
-                context.startActivity(intent);
-                dismiss();
+                Intent intent = new Intent(TimeSelectActivity.this, AppointmentDetailActivity.class);
+                startActivity(intent);
             }
         });
+
+
     }
 
-
     private void init() {
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_time_select, null);
-        setContentView(view);
 
-        button1 = view.findViewById(R.id.btn_td_am1);
-        button2 = view.findViewById(R.id.btn_td_am2);
-        button3 = view.findViewById(R.id.btn_td_am3);
-        button4 = view.findViewById(R.id.btn_td_am4);
-        button5 = view.findViewById(R.id.btn_td_pm1);
-        button6 = view.findViewById(R.id.btn_td_pm2);
-        button7 = view.findViewById(R.id.btn_td_pm3);
-        button8 = view.findViewById(R.id.btn_td_pm4);
-        textView_cancel = view.findViewById(R.id.tv_td_cancel);
+        button1 = findViewById(R.id.btn_td_am1);
+        button2 = findViewById(R.id.btn_td_am2);
+        button3 = findViewById(R.id.btn_td_am3);
+        button4 = findViewById(R.id.btn_td_am4);
+        button5 = findViewById(R.id.btn_td_pm1);
+        button6 = findViewById(R.id.btn_td_pm2);
+        button7 = findViewById(R.id.btn_td_pm3);
+        button8 = findViewById(R.id.btn_td_pm4);
+        textView_date = findViewById(R.id.tv_td_date);
+        textView_cancel = findViewById(R.id.tv_td_cancel);
 
         buttons.add(button1);
         buttons.add(button2);
@@ -173,17 +155,25 @@ public class TimeSelectDialog extends Dialog {
         buttons.add(button7);
         buttons.add(button8);
 
-        sharedPreferences = context.getSharedPreferences("JsonInfo", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("JsonInfo", Context.MODE_PRIVATE);
         userId = sharedPreferences.getInt("userId", 999999999);
         hospitalId = sharedPreferences.getInt("hospitalId", 999999999);
         hospitalName = sharedPreferences.getString("hospitalName", "");
         userName = sharedPreferences.getString("userName", "");
+
+        Intent intent = getIntent();
+        symptom = intent.getStringExtra("symptom");
+        level = intent.getStringExtra("level");
+        remote = intent.getStringExtra("remote");
+        dateSelected = intent.getStringExtra("dateSelected");
         remote = remote.equals("需要远程协助") ? "1" : "0";
 
-        HasAppointmentTimes();
+        textView_date.setText(dateSelected);
+
+        hasAppointmentTimes();
     }
 
-    private void HasAppointmentTimes() {
+    private void hasAppointmentTimes() {
 
         new Thread(new Runnable() {
             @Override
@@ -207,6 +197,12 @@ public class TimeSelectDialog extends Dialog {
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     hasAppointmentTimes.add(jsonArray.getJSONObject(i).getString("time"));
                                 }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        describe();
+                                    }
+                                });
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -215,7 +211,9 @@ public class TimeSelectDialog extends Dialog {
                 });
             }
         }).start();
+    }
 
+    private void describe() {
         int[] count = new int[8];
         for (int i = 0; i < hasAppointmentTimes.size(); i++) {
             if (hasAppointmentTimes.get(i).equals("8:00-9:00")) {

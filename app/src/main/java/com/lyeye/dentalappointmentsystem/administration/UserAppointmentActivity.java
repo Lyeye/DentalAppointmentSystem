@@ -20,7 +20,7 @@ public class UserAppointmentActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
 
-    private long userId;
+    private String userId;
     private AppointmentInfoImpl appointmentInfoImpl;
     private List<AppointmentInfo> appointmentInfoList;
 
@@ -37,7 +37,7 @@ public class UserAppointmentActivity extends AppCompatActivity {
     private void init() {
         recyclerView = findViewById(R.id.rv_uai_appointmentInfo);
         appointmentInfoImpl = new AppointmentInfoImpl(UserAppointmentActivity.this);
-        userId = getIntent().getLongExtra("userId", 99999999);
+//        userId = getIntent().getLongExtra("userId", 99999999);
         Log.d(null, "init: " + userId);
         appointmentInfoList = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
     }

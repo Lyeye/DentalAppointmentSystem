@@ -23,13 +23,19 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.User;
-import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
+import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Request.Builder;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class RegisterFragment extends Fragment {
 
@@ -37,13 +43,12 @@ public class RegisterFragment extends Fragment {
     private EditText editText_phone, editText_email, editText_username, editText_pwd, editText_confirmpwd;
     private RadioGroup radioGroup_gender;
     private RadioButton radioButton_male, radioButton_female;
-    private Spinner spinner_hospital;
+    private Spinner spinner_userType;
     private TextView textView_select, textView_birthday;
 
     private LoginFragment loginFragment;
-    private UserImpl userImpl;
     private String gender;
-    private Date birthday;
+    private String birthday;
 
 
     @Nullable
@@ -59,7 +64,6 @@ public class RegisterFragment extends Fragment {
 
 
         final WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
-        userImpl = new UserImpl(welcomeActivity);
 
         final Calendar startCalendar = Calendar.getInstance();
         startCalendar.set(1950, 0, 1);
@@ -72,7 +76,7 @@ public class RegisterFragment extends Fragment {
         editText_phone = view.findViewById(R.id.et_fr_phone);
         editText_email = view.findViewById(R.id.et_fr_email);
         editText_confirmpwd = view.findViewById(R.id.et_fr_confirmpassword);
-        spinner_hospital = view.findViewById(R.id.spinner_fr_hospital);
+        spinner_userType = view.findViewById(R.id.spinner_fr_type);
         textView_select = view.findViewById(R.id.tv_fr_selecthospital);
         textView_birthday = view.findViewById(R.id.tv_fr_birthday);
 
@@ -90,7 +94,7 @@ public class RegisterFragment extends Fragment {
                         SimpleDateFormat format = new SimpleDateFormat("YYYY年MM月dd日");
                         String format_birthday = format.format(date);
                         textView_birthday.setText(format_birthday);
-                        birthday = date;
+                        birthday = format_birthday;
                     }
                 }).setTitleText("选择您的生日").setCancelText("取消").setSubmitText("确定").isCyclic(true)
                         .setRangDate(startCalendar, endCalendar).build();
@@ -113,17 +117,14 @@ public class RegisterFragment extends Fragment {
         button_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String diagnosisNumber = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
-                User user = new User();
-                user.setUserPhoneNumber(editText_phone.getText().toString());
-                user.setUserEmail(editText_email.getText().toString());
-                user.setUserName(editText_username.getText().toString());
-                user.setUserPwd(editText_pwd.getText().toString());
-                user.setUserGender(gender);
-                user.setUserBirthday(birthday);
-                user.setAffiliatedHospital(spinner_hospital.getSelectedItem().toString());
-                user.setDiagnosisNumber(diagnosisNumber);
-                user.setCreateAt(new Date());
+                String name = editText_username.getText().toString();
+                String email = editText_email.getText().toString();
+                String phone = editText_phone.getText().toString();
+                String password = editText_pwd.getText().toString();
+                String type = spinner_userType.getSelectedItem().toString();
+                String number = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
+                String createAt = new SimpleDateFormat("YYYY年MM月dd日").format(new Date());
+
 
                 boolean isEmail = isEmail(editText_email.getText().toString());
                 boolean isMobile = isMobile(editText_phone.getText().toString());
@@ -136,20 +137,62 @@ public class RegisterFragment extends Fragment {
                         && editText_pwd != null
                         && editText_confirmpwd != null
                         && (editText_confirmpwd.getText().toString()).equals(editText_pwd.getText().toString())) {
-                    if (userImpl.findUserByEmail(editText_email.getText().toString()) == null) {
-                        userImpl.insertUser(user);
-                        Log.d(null, "userInfo: " + user.toString());
-                        loginFragment = new LoginFragment();
-                        FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction
-                                .addToBackStack(null)
-                                .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
-                                .replace(R.id.fl_swl_container, loginFragment)
-                                .commitAllowingStateLoss();
-                    } else {
-                        ToastUtil.showMsg(welcomeActivity, "邮箱已存在！");
-                    }
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                String json = "{\n" +
+                                        "\t\"name\":\"" + name + "\",\n" +
+                                        "\t\"gender\":\"" + gender + "\",\n" +
+                                        "\t\"email\":\"" + email + "\",\n" +
+                                        "\t\"password\":\"" + password + "\",\n" +
+                                        "\t\"phone\":\"" + phone + "\",\n" +
+                                        "\t\"number\":\"" + number + "\",\n" +
+                                        "\t\"birthday\":\"" + birthday + "\",\n" +
+                                        "\t\"createAt\":\"" + createAt + "\",\n" +
+                                        "\t\"type\":\"" + type + "\"\n" +
+                                        "}";
+                                OkHttpClient okHttpClient = new OkHttpClient();
+                                Request request = new Builder()
+                                        .url(UrlUtil.getURL("signUp"))
+                                        .post(RequestBody.create(MediaType.parse("application/json"), json))
+                                        .build();
+                                Response response = okHttpClient.newCall(request).execute();
+                                welcomeActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.showMsg(welcomeActivity, "正在注册...");
+                                    }
+                                });
+                                Log.d(null, "注册成功");
+                                welcomeActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.showMsg(welcomeActivity, "注册成功");
+                                        loginFragment = new LoginFragment();
+                                        FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        fragmentTransaction
+                                                .addToBackStack(null)
+                                                .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
+                                                .replace(R.id.fl_swl_container, loginFragment)
+                                                .commitAllowingStateLoss();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                Log.d(null, "注册失败：" + e);
+                                welcomeActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.showMsg(welcomeActivity, "注册失败：" + e);
+                                    }
+                                });
+                            }
+                        }
+                    }).start();
+
                 } else if (editText_email.getText().length() == 0) {
                     ToastUtil.showMsg(welcomeActivity, "邮箱不能为空！");
                 } else if (isEmail == false) {

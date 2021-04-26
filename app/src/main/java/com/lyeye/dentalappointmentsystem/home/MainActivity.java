@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -49,38 +50,42 @@ import com.lyeye.dentalappointmentsystem.information.MyInformationActivity;
 import com.lyeye.dentalappointmentsystem.notice.NoticeActivity;
 import com.lyeye.dentalappointmentsystem.scan.ScanActivity;
 import com.lyeye.dentalappointmentsystem.remote.JoinRoomActivity;
-import com.lyeye.dentalappointmentsystem.util.AppoinmentInfoMessageEvent;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
+import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 import com.lyeye.dentalappointmentsystem.welcome.WelcomeActivity;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static int IMAGE_REQUEST_CODE = 1;
     private Button button_register, button_appointment, button_myfamily, button_notice, button_camera, button_remote;
-    private TextView textView_username, textView_gender, textView_affiliatedHospital, textView_diagnosisNumber;
+    private TextView textView_username, textView_gender, textView_hospital, textView_diagnosisNumber;
     private RecyclerView recyclerView_appointmentInfo;
     private ImageView imageView_userPhoto, imageView_userInfo;
     private String paths;
     private SharedPreferences sharedPreferences;
     private Editor editor;
-    private User user;
-    private String userName;
-    private long userId;
-    private AppointmentInfoImpl appointmentInfoImpl;
-    private HospitalImpl hospitalImpl;
-    private UserImpl userImpl;
-    private List<Hospital> hospitals;
-    private List<AppointmentInfo> appointmentInfos;
+    private int userId;
     private boolean isLogin;
     private boolean isExit;
+    private String[] hospitalList = new String[3];
     private String[] permissions;
+    private List<JSONObject> appointmentList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,20 +93,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         init();
+        initRecyclerView();
         setOnClick();
         icon();
-
-        /*
-        注册事件
-        */
-        EventBus.getDefault().register(this);
-
     }
 
     private void init() {
 
         permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        isExit = false;
 
         button_register = findViewById(R.id.btn_main_register);
         button_appointment = findViewById(R.id.btn_main_appointment);
@@ -111,89 +110,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_remote = findViewById(R.id.btn_main_remote);
         textView_username = findViewById(R.id.tv_main_username);
         textView_gender = findViewById(R.id.tv_main_gender);
-        textView_affiliatedHospital = findViewById(R.id.tv_main_affiliatedHospital);
+        textView_hospital = findViewById(R.id.tv_main_hospital);
         textView_diagnosisNumber = findViewById(R.id.tv_main_diagnosisNumber);
         recyclerView_appointmentInfo = findViewById(R.id.rv_main_appointmentInfo);
         imageView_userPhoto = findViewById(R.id.iv_main_userPhoto);
         imageView_userInfo = findViewById(R.id.iv_main_userInfo);
 
-        userImpl = new UserImpl(MainActivity.this);
-        appointmentInfoImpl = new AppointmentInfoImpl(MainActivity.this);
-        hospitalImpl = new HospitalImpl(MainActivity.this);
-        sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        userName = sharedPreferences.getString("username", "登录/注册");
-        userId = sharedPreferences.getLong("userId", 999999999);
-        textView_username.setText(userName);
-        textView_gender.setText(sharedPreferences.getString("gender", ""));
-        textView_affiliatedHospital.setText(sharedPreferences.getString("affiliatedHospital", "仁康医院"));
-        textView_diagnosisNumber.setText(sharedPreferences.getString("diagnosisNumber", ""));
+        userId = sharedPreferences.getInt("userId", 999999999);
 
-        if (sharedPreferences.getString("username", "登录/注册") != "登录/注册") {
-            isLogin = true;
-        }
-
-        hospitals = hospitalImpl.findAll();
-        user = userImpl.findUserById(userId);
-
-        List<AppointmentInfo> appointmentInfosByUserId = appointmentInfoImpl.findAppointmentInfoByUserId(userId);
-        appointmentInfos = appointmentInfosByUserId;
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
-        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        recyclerView_appointmentInfo.setLayoutManager(linearLayoutManager);
-        recyclerView_appointmentInfo.setAdapter(new AppointmentInfoRecyclerViewAdapter(MainActivity.this, appointmentInfos));
-
-        if (user.getHeadPortrait() == null) {
-            Glide.with(MainActivity.this).load("https://pic3.zhimg.com/v2-d479b9589ae3b2a873936bd8f189bd85_r.jpg?source=1940ef5c").into(imageView_userPhoto);
-        } else {
-            Bitmap bitmap = BitmapFactory.decodeFile(user.getHeadPortrait());
-            Glide.with(this).load(bitmap).into(imageView_userPhoto);
-        }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            exit();
-            return false;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    private void exit() {
-        if (!isExit) {
-            isExit = true;
-            ToastUtil.showMsg(MainActivity.this, "再按一下退出程序");
-            new Handler() {
-                @Override
-                public void handleMessage(@NonNull Message msg) {
-                    super.handleMessage(msg);
-                    isExit = false;
-                }
-            }.sendEmptyMessageDelayed(0, 2000);
-        } else {
-            DaoManager.getInstance().closeConnection();
-            finishAffinity();
-            ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-            activityManager.killBackgroundProcesses(this.getPackageName());
-            System.exit(0);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAppointmentInfoMessageEvent(AppoinmentInfoMessageEvent messageEvent) {
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        isLogin = userId == 999999999 || sharedPreferences.getString("hospitalName", "").equals("") ? false : true;
+        textView_hospital.setText(sharedPreferences.getString("hospitalName", "").equals("") ? "请选择医院" : sharedPreferences.getString("hospitalName", ""));
+        Glide.with(MainActivity.this).load("https://pic3.zhimg.com/v2-d479b9589ae3b2a873936bd8f189bd85_r.jpg?source=1940ef5c").into(imageView_userPhoto);
+        setUserInfo();
+        findAllHospitals();
     }
 
     private void setOnClick() {
         textView_username.setOnClickListener(this);
-        textView_affiliatedHospital.setOnClickListener(this);
+        textView_hospital.setOnClickListener(this);
         button_register.setOnClickListener(this);
         button_appointment.setOnClickListener(this);
         button_myfamily.setOnClickListener(this);
@@ -232,23 +168,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, WelcomeActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.tv_main_affiliatedHospital:
-                String[] hospitalList = new String[5];
-                for (int i = 0; i < 5; i++) {
-                    hospitalList[i] = hospitals.get(i).getHospitalName();
-                }
+            case R.id.tv_main_hospital:
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("选择医院").setIcon(R.drawable.ic_hospital)
                         .setSingleChoiceItems(hospitalList, 0, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                user.setAffiliatedHospital(hospitalList[which]);
-                                DaoManager.getInstance().getDaoSession()
-                                        .getUserDao().update(user);
-                                ToastUtil.showMsg(MainActivity.this, "您选择了" + hospitalList[which]);
-                                textView_affiliatedHospital.setText(hospitalList[which]);
-                                editor.putString("affiliatedHospital", hospitalList[which]).apply();
+                                textView_hospital.setText(hospitalList[which]);
+                                editor.putString("hospitalName", hospitalList[which]);
+                                editor.putInt("hospitalId", which + 1).apply();
                                 startActivity(new Intent(MainActivity.this, MainActivity.class));
+                                ToastUtil.showMsg(MainActivity.this, "您选择了" + hospitalList[which]);
                             }
                         }).show();
                 break;
@@ -257,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent = new Intent(MainActivity.this, ScanActivity.class);
                     startActivity(intent);
                 } else {
-                    ToastUtil.showMsg(this, "请先登录");
+                    ToastUtil.showMsg(this, "请先选择医院");
                 }
                 break;
             case R.id.btn_main_appointment:
@@ -265,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent = new Intent(MainActivity.this, AppointmentActivity.class);
                     startActivity(intent);
                 } else {
-                    ToastUtil.showMsg(this, "请先登录");
+                    ToastUtil.showMsg(this, "请先选择医院");
                 }
                 break;
             case R.id.btn_main_myfamily:
@@ -277,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent = new Intent(MainActivity.this, NoticeActivity.class);
                     startActivity(intent);
                 } else {
-                    ToastUtil.showMsg(this, "请先登录");
+                    ToastUtil.showMsg(this, "请先选择医院");
                 }
                 break;
             case R.id.btn_main_camera:
@@ -285,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent = new Intent(MainActivity.this, CameraActivity.class);
                     startActivity(intent);
                 } else {
-                    ToastUtil.showMsg(this, "请先登录");
+                    ToastUtil.showMsg(this, "请先选择医院");
                 }
                 break;
             case R.id.btn_main_remote:
@@ -293,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent = new Intent(MainActivity.this, JoinRoomActivity.class);
                     startActivity(intent);
                 } else {
-                    ToastUtil.showMsg(this, "请先登录");
+                    ToastUtil.showMsg(this, "请先选择医院");
                 }
                 break;
         }
@@ -315,13 +245,132 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 cursor.close();
                 Bitmap bitmap = BitmapFactory.decodeFile(paths);
                 Glide.with(this).load(bitmap).into(imageView_userPhoto);
-                user.setHeadPortrait(paths);
-                DaoManager.getInstance().getDaoSession()
-                        .getUserDao().update(user);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void setUserInfo() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Request request = new Request.Builder()
+                            .url(UrlUtil.getURL("myInfo?userId=" + userId))
+                            .get()
+                            .build();
+                    new OkHttpClient().newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            Log.d(null, "onFailure: " + e);
+                        }
+
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            String responseBody = response.body().string();
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                Log.d(null, "jsonObject: " + jsonObject.toString());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            textView_username.setText(jsonObject.getString("name"));
+                                            textView_gender.setText(jsonObject.getString("gender"));
+                                            textView_diagnosisNumber.setText(jsonObject.getString("number"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void findAllHospitals() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Request request = new Request.Builder()
+                        .url(UrlUtil.getURL("getAllHospital"))
+                        .get()
+                        .build();
+                new OkHttpClient().newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        e.printStackTrace();
+                        Log.d(null, "获取医院失败: " + e);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String responseBody = response.body().string();
+                        Log.d(null, "responseBody: " + responseBody);
+                        try {
+                            JSONArray jsonArray = new JSONArray(responseBody);
+                            Log.d(null, "hospitalList: " + jsonArray.toString());
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                String name = jsonArray.getJSONObject(i).getString("name");
+                                hospitalList[i] = name;
+                                Log.d(null, "id: " + i);
+                                Log.d(null, "name: " + name);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void initRecyclerView() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Request request = new Request.Builder()
+                        .url(UrlUtil.getURL("AppointmentListByUserId?userId=" + userId))
+                        .get()
+                        .build();
+                new OkHttpClient().newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String string = response.body().string();
+                        try {
+                            JSONArray jsonArray = new JSONArray(string);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                appointmentList.add(jsonArray.getJSONObject(i));
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+                                    linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+                                    recyclerView_appointmentInfo.setLayoutManager(linearLayoutManager);
+                                    recyclerView_appointmentInfo.setAdapter(new AppointmentInfoRecyclerViewAdapter(MainActivity.this, appointmentList));
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     /*
@@ -351,5 +400,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Drawable drawable_remote = getResources().getDrawable(R.mipmap.ic_remote);
         drawable_remote.setBounds(0, 0, 100, 100);
         button_remote.setCompoundDrawables(null, drawable_remote, null, null);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void exit() {
+        if (!isExit) {
+            isExit = true;
+            ToastUtil.showMsg(MainActivity.this, "再按一下退出程序");
+            new Handler() {
+                @Override
+                public void handleMessage(@NonNull Message msg) {
+                    super.handleMessage(msg);
+                    isExit = false;
+                }
+            }.sendEmptyMessageDelayed(0, 2000);
+        } else {
+            DaoManager.getInstance().closeConnection();
+            finishAffinity();
+            ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+            activityManager.killBackgroundProcesses(this.getPackageName());
+            System.exit(0);
+        }
     }
 }

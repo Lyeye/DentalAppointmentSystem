@@ -53,28 +53,66 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="*请描述您的病症："
-                    android:textColor="@color/black"
-                    android:textSize="25dp"
-                    android:textStyle="bold"></TextView>
+                    android:layout_marginTop="20dp"
+                    android:text="病症："
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"></TextView>
 
-                <TextView
-                    android:id="@+id/tv_ad_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/red"
-                    android:textSize="10dp"></TextView>
-
-                <EditText
-                    android:id="@+id/et_ad_describe"
+                <org.angmarch.views.NiceSpinner
+                    android:id="@+id/ns_ad_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:hint="请在此输入病症信息"
-                    android:text="蛀牙"></EditText>
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="请选择病症"
+                    android:textStyle="italic"
+                    android:textSize="30dp"
+                    app:textTint="@color/red"></org.angmarch.views.NiceSpinner>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="病发程度："
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"></TextView>
+
+                <org.angmarch.views.NiceSpinner
+                    android:id="@+id/ns_ad_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="病症严重程度"
+                    android:textStyle="italic"
+                    android:textSize="30dp"
+                    app:textTint="@color/red"></org.angmarch.views.NiceSpinner>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="是否需要远程珍护："
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"></TextView>
+
+                <org.angmarch.views.NiceSpinner
+                    android:id="@+id/ns_ad_remote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="是否需要远程珍护"
+                    android:textStyle="italic"
+                    android:textSize="30dp"
+                    app:textTint="@color/orangered"></org.angmarch.views.NiceSpinner>
 
                 <!--                <TextView-->
                 <!--                    android:layout_width="wrap_content"-->

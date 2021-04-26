@@ -2,7 +2,6 @@ package com.lyeye.dentalappointmentsystem.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Property;
 
@@ -11,9 +10,7 @@ import java.util.Date;
 @Entity
 public class User {
 
-    @Id(autoincrement = true)
-    @Property(nameInDb = "USER_ID")
-    private Long userId;
+    private String userId;
 
     @Property(nameInDb = "USER_NAME")
     @NotNull
@@ -53,11 +50,12 @@ public class User {
     public User() {
     }
 
-    @Generated(hash = 2071083648)
-    public User(Long userId, @NotNull String userName, Long userAge, String userGender,
-                String userPwd, String userEmail, String userPhoneNumber,
-                String affiliatedHospital, Date userBirthday, String diagnosisNumber,
-                String headPortrait, Date createAt) {
+
+    @Generated(hash = 531496065)
+    public User(String userId, @NotNull String userName, Long userAge,
+                String userGender, String userPwd, String userEmail,
+                String userPhoneNumber, String affiliatedHospital, Date userBirthday,
+                String diagnosisNumber, String headPortrait, Date createAt) {
         this.userId = userId;
         this.userName = userName;
         this.userAge = userAge;
@@ -72,11 +70,12 @@ public class User {
         this.createAt = createAt;
     }
 
-    public Long getUserId() {
+
+    public String getUserId() {
         return this.userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

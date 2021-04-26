@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import static androidx.recyclerview.widget.RecyclerView.Adapter;
@@ -20,11 +23,11 @@ import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
 public class AppointmentInfoRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     private Context context;
-    private List<AppointmentInfo> appointmentInfoList;
+    private List<JSONObject> schedule;
 
-    public AppointmentInfoRecyclerViewAdapter(Context context, List<AppointmentInfo> appointmentInfos) {
+    public AppointmentInfoRecyclerViewAdapter(Context context, List<JSONObject> schedule) {
         this.context = context;
-        this.appointmentInfoList = appointmentInfos;
+        this.schedule = schedule;
     }
 
     @NonNull
@@ -36,15 +39,24 @@ public class AppointmentInfoRecyclerViewAdapter extends Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ((AppointmentInfoViewHolder) holder).textView_date.setText(appointmentInfoList.get(position).getAmiDate());
-        ((AppointmentInfoViewHolder) holder).textView_hospital.setText(appointmentInfoList.get(position).getAffiliatedHospital());
-        ((AppointmentInfoViewHolder) holder).textView_time.setText(appointmentInfoList.get(position).getAmiTime());
-        ((AppointmentInfoViewHolder) holder).textView_symptom.setText(appointmentInfoList.get(position).getAmiSymptoms());
+
+        try {
+            String amiDate = schedule.get(position).getString("date");
+            String amiTime = schedule.get(position).getString("time");
+            String symptom = schedule.get(position).getString("symptom");
+            String hospital = schedule.get(position).getString("hospitalName");
+            ((AppointmentInfoViewHolder) holder).textView_date.setText(amiDate);
+            ((AppointmentInfoViewHolder) holder).textView_hospital.setText(hospital);
+            ((AppointmentInfoViewHolder) holder).textView_time.setText(amiTime);
+            ((AppointmentInfoViewHolder) holder).textView_symptom.setText(symptom);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return appointmentInfoList.size();
+        return schedule.size();
     }
 
     class AppointmentInfoViewHolder extends ViewHolder {

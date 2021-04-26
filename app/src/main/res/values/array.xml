@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="sp_hospital">
-        <item>仁康医院</item>
-        <item>中心医院</item>
-        <item>人民医院</item>
-        <item>华康医院</item>
-        <item>协和医院</item>
+    <string-array name="sp_userType">
+        <item>病人</item>
+        <item>亲属</item>
     </string-array>
 
     <string-array name="mc_month">

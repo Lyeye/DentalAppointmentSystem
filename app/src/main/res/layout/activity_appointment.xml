@@ -30,8 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="10dp"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="5dp"
             app:cardUseCompatPadding="true">
 
             <TextView
@@ -43,6 +43,28 @@
                 android:drawableRight="@mipmap/ic_right"
                 android:gravity="center"
                 android:text="前往预约"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:textStyle="italic"></TextView>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="5dp"
+            app:cardUseCompatPadding="true">
+
+            <TextView
+                android:id="@+id/tv_am_reflesh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/orange"
+                android:drawableRight="@mipmap/ic_refresh"
+                android:gravity="center"
+                android:text="刷新"
                 android:textColor="@color/black"
                 android:textSize="25dp"
                 android:textStyle="italic"></TextView>

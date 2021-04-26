@@ -34,14 +34,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_hospital"
-                    android:text=" 您所在的医院："
+                    android:text=" 您的身份："
                     android:textSize="15dp" />
                 <!--最简单的加载下拉数组：entries，内容定义在string-array中-->
                 <Spinner
-                    android:id="@+id/spinner_fr_hospital"
+                    android:id="@+id/spinner_fr_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:entries="@array/sp_hospital"
+                    android:entries="@array/sp_userType"
                     android:spinnerMode="dialog" />
             </LinearLayout>
 

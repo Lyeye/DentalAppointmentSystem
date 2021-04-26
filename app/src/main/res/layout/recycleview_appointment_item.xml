@@ -36,8 +36,8 @@
                     android:background="@color/red"
                     android:elevation="10dp"
                     android:ems="1"
-                    android:maxEms="1"
                     android:gravity="center"
+                    android:maxEms="1"
                     android:text="取消预约"
                     android:textColor="@color/black"
                     android:textSize="20sp"
@@ -56,8 +56,8 @@
                     android:id="@+id/tv_ami_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:text="2020-11-31"
                     android:textColor="@color/blueviolet"
                     android:textSize="25dp" />
@@ -66,32 +66,55 @@
                     android:id="@+id/tv_ami_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:text="25:00-26:00"
-                    android:textColor="@color/black"
+                    android:textColor="@color/blueviolet"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:id="@+id/tv_ami_symptoms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="选择牙齿疾病类型"
+                    android:textColor="@color/red"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tv_ami_hospital"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:text="中山医院"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
+
                 <TextView
-                    android:id="@+id/tv_ami_symptoms"
+                    android:id="@+id/tv_ami_remote"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="15dp"
-                    android:text="选择牙齿疾病类型"
-                    android:textColor="@color/red"
+                    android:layout_marginTop="10dp"
+                    android:text="远程需求"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_ami_arrive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="到达情况"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+
             </LinearLayout>
 
 

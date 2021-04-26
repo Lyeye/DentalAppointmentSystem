@@ -25,7 +25,7 @@ public class FamilyNoticeInfoActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private User user;
-    private long userId;
+    private String userId;
     private AppointmentInfoImpl appointmentInfoImpl;
     private List<AppointmentInfo> noticeList;
 

@@ -20,6 +20,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.entity.Administrator;
 import com.lyeye.dentalappointmentsystem.entity.User;
@@ -27,8 +31,22 @@ import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.impl.AdministratorImpl;
 import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
+import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class LoginFragment extends Fragment {
@@ -41,7 +59,6 @@ public class LoginFragment extends Fragment {
     private AdminLoginFragment adminLoginFragment;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sp_editor;
-    private UserImpl userImpl;
 
     @Nullable
     @Override
@@ -61,47 +78,88 @@ public class LoginFragment extends Fragment {
         textView_signUp = view.findViewById(R.id.tv_fl_sign_up);
         textView_adminLogin = view.findViewById(R.id.tv_fl_admin_login);
 
-
         button_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
-                userImpl = new UserImpl(welcomeActivity);
+                String email = editText_userEmail.getText().toString();
+                String password = editText_pwd.getText().toString();
+
                 ToastUtil.showMsg(welcomeActivity, "正在登录...");
-                if (editText_userEmail.getText().toString().length() == 0 || editText_pwd.getText().toString().length() == 0) {
-                    if (editText_userEmail.getText().toString().length() == 0) {
+                if (email.length() == 0 || password.length() == 0) {
+                    if (email.length() == 0) {
                         editText_userEmail.setHint("用户邮箱不能为空！");
                     }
-                    if (editText_pwd.getText().toString().length() == 0) {
+                    if (password.length() == 0) {
                         editText_pwd.setHint("用户密码不能为空！");
                     }
                 } else {
-                    if (userImpl.findUserByEmail(editText_userEmail.getText().toString()) != null) {
-                        User userByEmail = userImpl.findUserByEmail(editText_userEmail.getText().toString());
-                        if (editText_pwd.getText().toString().equals(userByEmail.getUserPwd())) {
-                            Log.d(null, "loginUser: " + userByEmail.toString());
-                            Intent intent = new Intent(welcomeActivity, MainActivity.class);
-                            sharedPreferences = welcomeActivity.getSharedPreferences("user_info", Context.MODE_PRIVATE);
-                            sp_editor = sharedPreferences.edit();
-                            sp_editor.putString("userEmail", userByEmail.getUserEmail());
-                            sp_editor.putString("userPhone", userByEmail.getUserPhoneNumber());
-                            sp_editor.putLong("userId", userByEmail.getUserId());
-                            sp_editor.putString("username", userByEmail.getUserName());
-                            sp_editor.putString("password", userByEmail.getUserPwd());
-                            sp_editor.putString("gender", userByEmail.getUserGender());
-                            sp_editor.putString("affiliatedHospital", userByEmail.getAffiliatedHospital());
-                            sp_editor.putString("diagnosisNumber", userByEmail.getDiagnosisNumber());
-                            sp_editor.putString("birthday", new SimpleDateFormat("yyyy年MM月dd日").format(userByEmail.getUserBirthday()));
-                            sp_editor.apply();
-                            Log.d(null, "loginUser affiliatedHospital: " + sharedPreferences.getString("affiliatedHospital", ""));
-                            startActivity(intent);
-                            ToastUtil.showMsg(welcomeActivity, "登录成功");
-                        } else {
-                            ToastUtil.showMsg(welcomeActivity, "密码错误！");
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                OkHttpClient okHttpClient = new OkHttpClient();
+                                Request request = new Request.Builder()
+                                        .url(UrlUtil.getURL("login?email=" + email + "&password=" + password))
+                                        .get()
+                                        .build();
+                                okHttpClient.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                        welcomeActivity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ToastUtil.showMsg(welcomeActivity, "网络请求失败");
+                                            }
+                                        });
+                                        Log.d(null, "error: " + e);
+                                    }
+
+                                    @Override
+                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                        String responseData = response.body().string();
+                                        String[] strings = responseData.split("==>");
+                                        Log.d(null, "responseData: " + responseData);
+                                        if (strings[0].equals("SUCCESS")) {
+                                            welcomeActivity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    sharedPreferences = welcomeActivity.getSharedPreferences("JsonInfo", Context.MODE_PRIVATE);
+                                                    sp_editor = sharedPreferences.edit();
+                                                    sp_editor.putInt("userId", Integer.valueOf(strings[1]));
+                                                    sp_editor.putString("userName", strings[2]);
+                                                    sp_editor.putString("userGender", strings[3]);
+                                                    sp_editor.putString("hospitalName", "");
+                                                    sp_editor.putInt("hospitalId", 999999999);
+                                                    sp_editor.apply();
+                                                    startActivity(new Intent(welcomeActivity, MainActivity.class));
+                                                    ToastUtil.showMsg(welcomeActivity, "登录成功");
+                                                }
+                                            });
+                                        } else if (strings[0].equals("PwdError")) {
+                                            welcomeActivity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    ToastUtil.showMsg(welcomeActivity, "密码错误");
+                                                }
+                                            });
+                                        } else if (strings[0].equals("NoData")) {
+                                            welcomeActivity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    ToastUtil.showMsg(welcomeActivity, "请先注册");
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.d(null, "error: " + e);
+                            }
                         }
-                    } else {
-                        ToastUtil.showMsg(welcomeActivity, "改账号不存在！");
-                    }
+                    }).start();
                 }
             }
         });

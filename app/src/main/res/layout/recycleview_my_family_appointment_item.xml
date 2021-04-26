@@ -37,20 +37,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
-                android:text="主治医生"
+                android:text="时间"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/tv_fami_symptoms"
+                android:id="@+id/tv_fami_symptom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="15dp"
                 android:text="牙齿疾病类型"
-                android:textColor="@color/red"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_fami_hospital"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+                android:text="医院"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

@@ -15,7 +15,13 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +29,11 @@ import java.util.List;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class DateSelectionActivity extends AppCompatActivity {
@@ -30,12 +41,13 @@ public class DateSelectionActivity extends AppCompatActivity {
     private TextView textView_month, textView_year;
     private CalendarView calendarView_calendar;
 
+    ArrayList<String> dateList = new ArrayList<>();
     private List<String> hasAppointmentTimes = new ArrayList<>();
     private List<Calendar> calendars = new ArrayList<>();
     private SharedPreferences sharedPreferences;
-    private AppointmentInfoImpl appointmentInfoImpl;
-    private String symptom;
-    private String affiliatedHospital;
+
+    private String symptom, level, remote;
+    private int hospitalId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,22 +55,18 @@ public class DateSelectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_date_selection);
 
         init();
+        getAppointmentList();
 
         calendarView_calendar.setOnDateLongClickListener(new CalendarView.OnDateLongClickListener() {
             @Override
             public void onDateLongClick(Calendar calendar) {
                 String dateSelected = calendar.getYear() + "-" + calendar.getMonth() + "-" + calendar.getDay();
-                List<AppointmentInfo> list = appointmentInfoImpl.findAppointmentInfoByAmiDateAndAffiliatedHospital(dateSelected, affiliatedHospital);
-                if (list.isEmpty()) {
-                    TimeSelectDialog timeSelectDialog = new TimeSelectDialog(DateSelectionActivity.this, R.style.Dialog, dateSelected, symptom, hasAppointmentTimes);
-                    timeSelectDialog.show();
-                } else {
-                    for (int i = 0; i < list.size(); i++) {
-                        hasAppointmentTimes.add(list.get(i).getAmiTime());
-                        TimeSelectDialog timeSelectDialog = new TimeSelectDialog(DateSelectionActivity.this, R.style.Dialog, dateSelected, symptom, hasAppointmentTimes);
-                        timeSelectDialog.show();
-                    }
-                }
+                Intent intent = new Intent(DateSelectionActivity.this, TimeSelectActivity.class);
+                intent.putExtra("symptom", symptom);
+                intent.putExtra("level", level);
+                intent.putExtra("remote", remote);
+                intent.putExtra("dateSelected", dateSelected);
+                startActivity(intent);
             }
         });
         calendarView_calendar.setOnMonthChangeListener(new CalendarView.OnMonthChangeListener() {
@@ -101,23 +109,57 @@ public class DateSelectionActivity extends AppCompatActivity {
         textView_year.setText(calendarView_calendar.getCurYear() + "年");
         textView_month.setText(calendarView_calendar.getCurMonth() + "月");
 
-        sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
-        affiliatedHospital = sharedPreferences.getString("affiliatedHospital", "");
+        sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
+        hospitalId = sharedPreferences.getInt("hospitalId", 999999999);
 
         Intent intent = getIntent();
-        symptom = intent.getStringExtra("symptom");
+        symptom = intent.getStringExtra("detail_symptom");
+        level = intent.getStringExtra("detail_level");
+        remote = intent.getStringExtra("detail_remote");
 
         hasAppointmentTimes.clear();
         hasAppointmentTimes.add("");
 
-        appointmentInfoImpl = new AppointmentInfoImpl(DateSelectionActivity.this);
+    }
 
-        List<AppointmentInfo> appointmentInfoList = appointmentInfoImpl.findAllInAffiliatedHospital(affiliatedHospital);
-        Log.d(null, "listSize: " + appointmentInfoList.size());
-        ArrayList<String> dateList = new ArrayList<>();
-        for (int i = 0; i < appointmentInfoList.size(); i++) {
-            dateList.add(appointmentInfoList.get(i).getAmiDate());
-        }
+    private void getAppointmentList() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Request request = new Request.Builder()
+                        .url(UrlUtil.getURL("AppointmentListByHospitalId?hospitalId=" + hospitalId))
+                        .get()
+                        .build();
+                new OkHttpClient().newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String string = response.body().string();
+                        try {
+                            JSONArray jsonArray = new JSONArray(string);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                dateList.add(jsonArray.getJSONObject(i).getString("date"));
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    initCalendar();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void initCalendar() {
         Map<String, Integer> map = new HashMap<>();
         for (String string : dateList) {
             if (map.containsKey(string)) {

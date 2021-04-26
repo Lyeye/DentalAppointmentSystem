@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -19,12 +21,12 @@ import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
 public class MyFamilyAppointmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private List<AppointmentInfo> scheduleList;
+    private List<JSONObject> schedule;
 
 
-    public MyFamilyAppointmentRecyclerViewAdapter(Context context, List<AppointmentInfo> scheduleList) {
+    public MyFamilyAppointmentRecyclerViewAdapter(Context context, List<JSONObject> schedule) {
         this.context = context;
-        this.scheduleList = scheduleList;
+        this.schedule = schedule;
     }
 
     @NonNull
@@ -36,27 +38,36 @@ public class MyFamilyAppointmentRecyclerViewAdapter extends RecyclerView.Adapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_date.setText("预约日期：" + scheduleList.get(position).getAmiDate());
-        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_time.setText("预约时间：" + scheduleList.get(position).getAmiTime());
-        ((MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_symptoms.setText("预约类型：" + scheduleList.get(position).getAmiSymptoms());
+        try {
+            String amiDate = schedule.get(position).getString("date");
+            String amiTime = schedule.get(position).getString("time");
+            ((MyFamilyAppointmentRecyclerViewAdapter.MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_date.setText("预约日期：" + amiDate);
+            ((MyFamilyAppointmentRecyclerViewAdapter.MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_time.setText("预约时间：" + amiTime);
+            ((MyFamilyAppointmentRecyclerViewAdapter.MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_symptom.setText("疾病类型：" + schedule.get(position).getString("symptom"));
+            ((MyFamilyAppointmentRecyclerViewAdapter.MyFamilyAppointmentRecyclerViewHolder) holder).textView_fami_hospital.setText("预约医院：" + schedule.get(position).getString("hospitalName"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return scheduleList.size();
+        return schedule.size();
     }
 
     class MyFamilyAppointmentRecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView_fami_date;
         private TextView textView_fami_time;
-        private TextView textView_fami_symptoms;
+        private TextView textView_fami_symptom;
+        private TextView textView_fami_hospital;
 
         public MyFamilyAppointmentRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             textView_fami_date = itemView.findViewById(R.id.tv_fami_date);
             textView_fami_time = itemView.findViewById(R.id.tv_fami_time);
-            textView_fami_symptoms = itemView.findViewById(R.id.tv_fami_symptoms);
+            textView_fami_symptom = itemView.findViewById(R.id.tv_fami_symptom);
+            textView_fami_hospital = itemView.findViewById(R.id.tv_fami_hospital);
         }
     }
 }
