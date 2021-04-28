@@ -2,6 +2,7 @@ package com.lyeye.dentalappointmentsystem.camera;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,29 +23,46 @@ import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
+import com.lyeye.dentalappointmentsystem.util.UrlUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class CameraActivity extends AppCompatActivity {
 
     private static int REQUEST_CAMERA = 1;
     private static int IMAGE_REQUEST_CODE = 2;
+
     private Button button_takePhotoFromAssets, button_takePhotoWithCamera;
     private TextView textView_upload;
     private ImageView imageView_photo;
+
+    private SharedPreferences sharedPreferences;
     private File file;
-    private String paths;
+    private String path, currentPath, userId, userName, hospitalName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        button_takePhotoWithCamera = findViewById(R.id.btn_camera_takephotoswithcamera);
-        button_takePhotoFromAssets = findViewById(R.id.btn_camera_takePhotosFromAssets);
-        imageView_photo = findViewById(R.id.iv_camera_takePhotos);
-        textView_upload = findViewById(R.id.tv_camera_upload);
+        init();
+
+        currentPath = null;
 
         icon();
 
@@ -83,13 +101,87 @@ public class CameraActivity extends AppCompatActivity {
         textView_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (file == null && paths == null) {
-                    ToastUtil.showMsg(CameraActivity.this, "请先选择照片！！");
+                if (currentPath != null) {
+                    uploadImg(new File(currentPath));
                 } else {
-                    textView_upload.setText("上传成功");
+                    ToastUtil.showMsg(CameraActivity.this, "请先选择照片！！");
                 }
             }
         });
+    }
+
+    private void init() {
+        button_takePhotoWithCamera = findViewById(R.id.btn_camera_takephotoswithcamera);
+        button_takePhotoFromAssets = findViewById(R.id.btn_camera_takePhotosFromAssets);
+        imageView_photo = findViewById(R.id.iv_camera_takePhotos);
+        textView_upload = findViewById(R.id.tv_camera_upload);
+
+        sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
+        userId = String.valueOf(sharedPreferences.getInt("userId", 999999999));
+        userName = sharedPreferences.getString("userName", "");
+        hospitalName = sharedPreferences.getString("hospitalName", "");
+    }
+
+    private void uploadImg(File uploadFile) {
+        textView_upload.setText("正在上传...");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MultipartBody.Builder mb = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                    MediaType contentType;
+                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), uploadFile);
+                    mb.addFormDataPart("file", uploadFile.getName(), fileBody);
+                    Request request = new Request.Builder()
+                            .url(UrlUtil.getURL("uploadImg?userId=" + userId + "&userName=" + userName + "&hospitalName=" + hospitalName))
+                            .post(mb.build())
+                            .build();
+                    new OkHttpClient()
+                            .newBuilder()
+                            .readTimeout(10000, TimeUnit.MILLISECONDS)
+                            .build().newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    System.out.println("网络请求失败" + e);
+                                    ToastUtil.showMsg(CameraActivity.this, "网络请求失败" + e);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            String string = response.body().string();
+                            if (string.equals("SUCCESS")) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        System.out.println("上传成功");
+                                        textView_upload.setText("上传成功");
+                                        ToastUtil.showMsg(CameraActivity.this, "上传成功，正在返回首页");
+                                        startActivity(new Intent(CameraActivity.this, MainActivity.class));
+                                    }
+                                });
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        System.out.println("上传失败");
+                                        textView_upload.setText("上传失败");
+                                        ToastUtil.showMsg(CameraActivity.this, "上传失败，正在返回首页");
+                                        startActivity(new Intent(CameraActivity.this, MainActivity.class));
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+
+                }
+            }
+        }).start();
     }
 
     private void useCamera() {
@@ -103,6 +195,7 @@ public class CameraActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         startActivityForResult(intent, REQUEST_CAMERA);
+        currentPath = file.getAbsolutePath();
     }
 
     @Override
@@ -136,10 +229,11 @@ public class CameraActivity extends AppCompatActivity {
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 /*获取照片路径*/
-                paths = cursor.getString(columnIndex);
+                path = cursor.getString(columnIndex);
                 cursor.close();
-                Bitmap bitmap = BitmapFactory.decodeFile(paths);
+                Bitmap bitmap = BitmapFactory.decodeFile(path);
                 Glide.with(this).load(bitmap).into(imageView_photo);
+                currentPath = path;
             } catch (Exception e) {
                 e.printStackTrace();
             }

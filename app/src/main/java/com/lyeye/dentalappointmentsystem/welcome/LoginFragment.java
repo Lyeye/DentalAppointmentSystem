@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +76,7 @@ public class LoginFragment extends Fragment {
         button_signIn = view.findViewById(R.id.btn_fl_sign_in);
         editText_userEmail = view.findViewById(R.id.et_fl_useremail);
         editText_pwd = view.findViewById(R.id.et_fl_password);
+        editText_pwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
         textView_signUp = view.findViewById(R.id.tv_fl_sign_up);
         textView_adminLogin = view.findViewById(R.id.tv_fl_admin_login);
 
@@ -167,20 +169,21 @@ public class LoginFragment extends Fragment {
         textView_adminLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adminLoginFragment = new AdminLoginFragment();
-                WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
-                Administrator administrator = new Administrator();
-                administrator.setAdministratorName("admin");
-                administrator.setAdministratorEmail("admin@lyeye.com");
-                administrator.setAdministratorPwd("123");
-                new AdministratorImpl(welcomeActivity).addAdmin(administrator);
-                FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction
-                        .addToBackStack(null)
-                        .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
-                        .replace(R.id.fl_swl_container, adminLoginFragment)
-                        .commitAllowingStateLoss();
+                ToastUtil.showMsg(getActivity(), "功能尚在开发中");
+//                adminLoginFragment = new AdminLoginFragment();
+//                WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
+//                Administrator administrator = new Administrator();
+//                administrator.setAdministratorName("admin");
+//                administrator.setAdministratorEmail("admin@lyeye.com");
+//                administrator.setAdministratorPwd("123");
+//                new AdministratorImpl(welcomeActivity).addAdmin(administrator);
+//                FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction
+//                        .addToBackStack(null)
+//                        .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
+//                        .replace(R.id.fl_swl_container, adminLoginFragment)
+//                        .commitAllowingStateLoss();
             }
         });
 

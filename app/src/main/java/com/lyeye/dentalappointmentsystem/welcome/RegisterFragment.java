@@ -2,6 +2,7 @@ package com.lyeye.dentalappointmentsystem.welcome;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +76,9 @@ public class RegisterFragment extends Fragment {
         editText_pwd = view.findViewById(R.id.et_fr_password);
         editText_phone = view.findViewById(R.id.et_fr_phone);
         editText_email = view.findViewById(R.id.et_fr_email);
+        editText_pwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
         editText_confirmpwd = view.findViewById(R.id.et_fr_confirmpassword);
+        editText_confirmpwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
         spinner_userType = view.findViewById(R.id.spinner_fr_type);
         textView_select = view.findViewById(R.id.tv_fr_selecthospital);
         textView_birthday = view.findViewById(R.id.tv_fr_birthday);

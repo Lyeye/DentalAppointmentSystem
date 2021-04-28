@@ -11,11 +11,29 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.home.MainActivity;
+import com.lyeye.dentalappointmentsystem.scan.RegisterActivity;
+import com.lyeye.dentalappointmentsystem.util.ToastUtil;
+import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import im.zego.zegoexpress.ZegoExpressEngine;
 import im.zego.zegoexpress.constants.ZegoScenario;
 import im.zego.zegoexpress.entity.ZegoCanvas;
 import im.zego.zegoexpress.entity.ZegoUser;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class RemoteActivity extends AppCompatActivity {
 
@@ -27,7 +45,7 @@ public class RemoteActivity extends AppCompatActivity {
     private long appID = 970865325L;
     private String appSign = "e387b620f06eba312b33a030b9407118a2bee791cd8de5f3f60e4826d800de56";
     private SharedPreferences sharedPreferences;
-    private String userName, joinRoomName, joinStreamName;
+    private String userId, userName, date, startTime, joinRoomName, joinStreamName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +65,11 @@ public class RemoteActivity extends AppCompatActivity {
                 engine.stopPreview();
                 engine.stopPublishingStream();
                 engine.logoutRoom(joinRoomName);
-                Intent intent = new Intent(getApplicationContext(), JoinRoomActivity.class);
-                startActivity(intent);
+                uploadData();
             }
         });
     }
+
 
     private void init() {
         textureView_doctor = findViewById(R.id.textureView_remote_doctor);
@@ -59,13 +77,57 @@ public class RemoteActivity extends AppCompatActivity {
         imageView_handUp = findViewById(R.id.iv_remote_exit);
         engine = ZegoExpressEngine.createEngine(appID, appSign, true, ZegoScenario.GENERAL, getApplication(), null);
 
-        sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
-        userName = sharedPreferences.getString("username", null);
+        sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
+        userId = String.valueOf(sharedPreferences.getInt("userId", 999999999));
+        userName = sharedPreferences.getString("userName", "");
         user = new ZegoUser(userName);
 
         Intent intent = getIntent();
-        joinRoomName = intent.getStringExtra("JoinRoomName");
-        joinStreamName = intent.getStringExtra("JoinStreamName");
+        startTime = intent.getStringExtra("startTime");
+        date = intent.getStringExtra("date");
+        joinRoomName = intent.getStringExtra("roomName");
+        joinStreamName = intent.getStringExtra("streamName");
+    }
+
+    private void uploadData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String json = "{\n" +
+                            "\t\"userId\":\"" + userId + "\",\n" +
+                            "\t\"userName\":\"" + userName + "\",\n" +
+                            "\t\"roomName\":\"" + joinRoomName + "\",\n" +
+                            "\t\"date\":\"" + date + "\",\n" +
+                            "\t\"startTime\":\"" + startTime + "\",\n" +
+                            "\t\"finishTime\":\"" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "\"\n" +
+                            "}";
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(UrlUtil.getURL("remote?userId=" + userId))
+                            .post(RequestBody.create(MediaType.parse("application/json"), json))
+                            .build();
+                    okHttpClient.newCall(request).execute();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(getApplicationContext(), JoinRoomActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                } catch (Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(getApplicationContext(), JoinRoomActivity.class);
+                            ToastUtil.showMsg(getApplicationContext(), "数据上传不成功");
+                            startActivity(intent);
+                        }
+                    });
+                    System.out.println("异常：" + e);
+                }
+            }
+        }).start();
     }
 
     @Override

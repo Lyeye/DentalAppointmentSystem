@@ -15,14 +15,18 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
+import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
+import com.maning.calendarlibrary.MNCalendar;
+import com.maning.calendarlibrary.listeners.OnCalendarItemClickListener;
+import com.maning.calendarlibrary.model.MNCalendarConfig;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +44,7 @@ public class DateSelectionActivity extends AppCompatActivity {
 
     private TextView textView_month, textView_year;
     private CalendarView calendarView_calendar;
+    private MNCalendar mnCalendar;
 
     ArrayList<String> dateList = new ArrayList<>();
     private List<String> hasAppointmentTimes = new ArrayList<>();

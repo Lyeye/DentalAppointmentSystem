@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.lyeye.dentalappointmentsystem.R;
+import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +44,10 @@ public class NoticeRecyclerViewAdapter extends Adapter<ViewHolder> {
             ((NoticeRecyclerViewHolder) holder).textView_time.setText(noticeList.get(position).getString("date") + "  " + noticeList.get(position).getString("time"));
             ((NoticeRecyclerViewHolder) holder).textView_notice.setText(noticeList.get(position).getString("content"));
             ((NoticeRecyclerViewHolder) holder).textView_from.setText("来自：" + noticeList.get(position).getString("from"));
+            String picture = noticeList.get(position).getString("picture");
+            if (picture != null) {
+                Glide.with(context).load(UrlUtil.getURL("image/" + picture)).into(((NoticeRecyclerViewHolder) holder).imageView_pic);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -57,12 +64,15 @@ public class NoticeRecyclerViewAdapter extends Adapter<ViewHolder> {
         private TextView textView_time;
         private TextView textView_from;
 
+        private ImageView imageView_pic;
+
 
         public NoticeRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             textView_notice = itemView.findViewById(R.id.tv_notice_content);
             textView_time = itemView.findViewById(R.id.tv_notice_time);
             textView_from = itemView.findViewById(R.id.tv_notice_from);
+            imageView_pic = itemView.findViewById(R.id.tv_notice_pic);
         }
     }
 }

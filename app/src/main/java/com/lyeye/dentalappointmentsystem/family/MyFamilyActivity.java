@@ -44,7 +44,6 @@ public class MyFamilyActivity extends AppCompatActivity {
     private Button button_familyLogin;
 
     private Date select_birthday;
-    private UserImpl userImpl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

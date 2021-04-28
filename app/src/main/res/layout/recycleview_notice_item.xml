@@ -48,6 +48,13 @@
                     android:text="1111111111111111111111111111111"
                     android:textSize="25dp" />
 
+                <ImageView
+                    android:id="@+id/tv_notice_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"></ImageView>
+
                 <TextView
                     android:id="@+id/tv_notice_from"
                     android:layout_width="wrap_content"

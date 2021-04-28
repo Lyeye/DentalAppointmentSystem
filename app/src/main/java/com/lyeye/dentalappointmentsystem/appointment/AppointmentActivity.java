@@ -60,8 +60,6 @@ public class AppointmentActivity extends AppCompatActivity {
         textView_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                init();
-                getAppointmentList();
                 initRecyclerView();
             }
         });

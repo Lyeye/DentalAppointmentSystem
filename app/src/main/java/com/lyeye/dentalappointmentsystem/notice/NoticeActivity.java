@@ -2,6 +2,8 @@ package com.lyeye.dentalappointmentsystem.notice;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +34,7 @@ import okhttp3.Response;
 public class NoticeActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private TextView textView_reflesh;
 
     private SharedPreferences sharedPreferences;
     private int userId;
@@ -44,6 +47,21 @@ public class NoticeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notice);
 
         init();
+
+        textView_reflesh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setLayoutManager(new XLinearLayoutManager(NoticeActivity.this, LinearLayoutManager.VERTICAL, false));
+                recyclerView.setAdapter(new NoticeRecyclerViewAdapter(NoticeActivity.this, noticeList));
+            }
+        });
+    }
+
+    private void init() {
+        recyclerView = findViewById(R.id.rv_notice_notice);
+        textView_reflesh = findViewById(R.id.tv_notice_reflesh);
+        sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
+        userId = sharedPreferences.getInt("userId", 99999999);
 
         new Thread(new Runnable() {
             @Override
@@ -80,11 +98,5 @@ public class NoticeActivity extends AppCompatActivity {
                 });
             }
         }).start();
-    }
-
-    private void init() {
-        recyclerView = findViewById(R.id.rv_notice_notice);
-        sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
-        userId = sharedPreferences.getInt("userId", 99999999);
     }
 }

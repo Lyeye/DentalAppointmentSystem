@@ -18,6 +18,9 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.appointment.DateSelectionActivity;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class JoinRoomActivity extends AppCompatActivity {
@@ -52,8 +55,10 @@ public class JoinRoomActivity extends AppCompatActivity {
                     editText_JoinStreamName.setHint("不能为空");
                 } else {
                     Intent intent = new Intent(JoinRoomActivity.this, RemoteActivity.class);
-                    intent.putExtra("JoinRoomName", editText_JoinRoomName.getText().toString());
-                    intent.putExtra("JoinStreamName", editText_JoinStreamName.getText().toString());
+                    intent.putExtra("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                    intent.putExtra("startTime", new SimpleDateFormat("HH:mm:ss:SSS").format(new Date()));
+                    intent.putExtra("roomName", editText_JoinRoomName.getText().toString());
+                    intent.putExtra("streamName", editText_JoinStreamName.getText().toString());
                     startActivity(intent);
                 }
             }

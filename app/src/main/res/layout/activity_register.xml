@@ -6,16 +6,15 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".scan.ScanActivity">
+    tools:context=".scan.RegisterActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="请选择扫码操作"
+        android:text="点击进行扫码签到"
         android:layout_marginBottom="80dp"
         android:textStyle="bold"
-        android:textSize="30dp">
-    </TextView>
+        android:textSize="30dp"></TextView>
 
     <Button
         android:id="@+id/btn_scan_register"
@@ -27,16 +26,5 @@
         android:text="扫码登记"
         android:background="@drawable/bg_main_btn_3"
         android:onClick="Register_Scan" />
-    <Button
-        android:id="@+id/btn_scan_pay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:drawableTop="@mipmap/ic_pay"
-        android:background="@drawable/bg_main_btn_5"
-        android:text="扫码付款"
-        android:onClick="Pay_Scan" />
 
 </LinearLayout>

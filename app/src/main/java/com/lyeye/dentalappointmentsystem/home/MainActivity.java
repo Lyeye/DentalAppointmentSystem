@@ -38,17 +38,12 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.adapter.AppointmentInfoRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.appointment.AppointmentActivity;
 import com.lyeye.dentalappointmentsystem.camera.CameraActivity;
-import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
-import com.lyeye.dentalappointmentsystem.entity.Hospital;
-import com.lyeye.dentalappointmentsystem.entity.User;
 import com.lyeye.dentalappointmentsystem.family.MyFamilyActivity;
 import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
-import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
-import com.lyeye.dentalappointmentsystem.impl.HospitalImpl;
-import com.lyeye.dentalappointmentsystem.impl.UserImpl;
 import com.lyeye.dentalappointmentsystem.information.MyInformationActivity;
 import com.lyeye.dentalappointmentsystem.notice.NoticeActivity;
-import com.lyeye.dentalappointmentsystem.scan.ScanActivity;
+import com.lyeye.dentalappointmentsystem.scan.PayActivity;
+import com.lyeye.dentalappointmentsystem.scan.RegisterActivity;
 import com.lyeye.dentalappointmentsystem.remote.JoinRoomActivity;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
@@ -76,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button button_register, button_appointment, button_myfamily, button_notice, button_camera, button_remote;
     private TextView textView_username, textView_gender, textView_hospital, textView_diagnosisNumber;
     private RecyclerView recyclerView_appointmentInfo;
-    private ImageView imageView_userPhoto, imageView_userInfo;
-    private String paths;
+    private ImageView imageView_userPhoto, imageView_userInfo, imageView_pay;
+    private String paths, userName;
     private SharedPreferences sharedPreferences;
     private Editor editor;
     private int userId;
@@ -115,10 +110,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView_appointmentInfo = findViewById(R.id.rv_main_appointmentInfo);
         imageView_userPhoto = findViewById(R.id.iv_main_userPhoto);
         imageView_userInfo = findViewById(R.id.iv_main_userInfo);
+        imageView_pay = findViewById(R.id.iv_main_pay);
 
         sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         userId = sharedPreferences.getInt("userId", 999999999);
+        userName = sharedPreferences.getString("userName", "");
 
         isLogin = userId == 999999999 || sharedPreferences.getString("hospitalName", "").equals("") ? false : true;
         textView_hospital.setText(sharedPreferences.getString("hospitalName", "").equals("") ? "请选择医院" : sharedPreferences.getString("hospitalName", ""));
@@ -138,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_remote.setOnClickListener(this);
         imageView_userPhoto.setOnClickListener(this);
         imageView_userInfo.setOnClickListener(this);
+        imageView_pay.setOnClickListener(this);
     }
 
     @Override
@@ -164,6 +162,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivityForResult(intent, IMAGE_REQUEST_CODE);
                     break;
                 }
+            case R.id.iv_main_pay:
+                if (isLogin) {
+                    intent = new Intent(MainActivity.this, PayActivity.class);
+                    startActivity(intent);
+                } else {
+                    ToastUtil.showMsg(this, "请先选择医院");
+                }
+                break;
             case R.id.tv_main_username:
                 intent = new Intent(MainActivity.this, WelcomeActivity.class);
                 startActivity(intent);
@@ -184,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_main_register:
                 if (isLogin) {
-                    intent = new Intent(MainActivity.this, ScanActivity.class);
+                    intent = new Intent(MainActivity.this, RegisterActivity.class);
                     startActivity(intent);
                 } else {
                     ToastUtil.showMsg(this, "请先选择医院");
@@ -203,12 +209,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btn_main_notice:
-                if (isLogin) {
-                    intent = new Intent(MainActivity.this, NoticeActivity.class);
-                    startActivity(intent);
-                } else {
-                    ToastUtil.showMsg(this, "请先选择医院");
-                }
+                intent = new Intent(MainActivity.this, NoticeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_main_camera:
                 if (isLogin) {

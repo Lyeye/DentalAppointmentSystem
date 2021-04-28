@@ -30,15 +30,15 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:gravity="center"
-            android:textColor="@color/black"
             android:text="选择医院"
+            android:textColor="@color/black"
             android:textSize="25dp" />
 
         <ImageView
-            android:id="@+id/iv_main_setting"
+            android:id="@+id/iv_main_pay"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:background="@mipmap/ic_setting"
+            android:background="@mipmap/ic_money"
             android:scaleType="fitCenter" />
 
     </LinearLayout>
