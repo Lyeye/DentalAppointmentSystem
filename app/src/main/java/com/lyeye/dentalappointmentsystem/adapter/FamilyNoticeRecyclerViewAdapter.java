@@ -11,9 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
-import com.lyeye.dentalappointmentsystem.entity.User;
-import com.lyeye.dentalappointmentsystem.impl.UserImpl;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;

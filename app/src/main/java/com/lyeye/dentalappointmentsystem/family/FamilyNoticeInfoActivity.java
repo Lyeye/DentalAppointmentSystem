@@ -9,18 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.adapter.FamilyNoticeRecyclerViewAdapter;
-import com.lyeye.dentalappointmentsystem.adapter.NoticeRecyclerViewAdapter;
 import com.lyeye.dentalappointmentsystem.appointment.XLinearLayoutManager;
-import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
-import com.lyeye.dentalappointmentsystem.entity.User;
-import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
-import com.lyeye.dentalappointmentsystem.notice.NoticeActivity;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
-import com.lyeye.dentalappointmentsystem.util.UserLoginMessageEvent;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;

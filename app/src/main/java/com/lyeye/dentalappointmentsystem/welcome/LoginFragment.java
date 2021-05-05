@@ -26,11 +26,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.Administrator;
-import com.lyeye.dentalappointmentsystem.entity.User;
+
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.impl.AdministratorImpl;
-import com.lyeye.dentalappointmentsystem.impl.UserImpl;
+
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 
@@ -57,7 +55,7 @@ public class LoginFragment extends Fragment {
     private TextView textView_signUp, textView_adminLogin;
 
     private RegisterFragment registerFragment;
-    private AdminLoginFragment adminLoginFragment;
+
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sp_editor;
 

@@ -1,21 +1,17 @@
-package com.lyeye.dentalappointmentsystem.scan;
+package com.lyeye.dentalappointmentsystem.register;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.huawei.hms.hmsscankit.ScanUtil;
 import com.huawei.hms.ml.scan.HmsScan;
@@ -24,20 +20,23 @@ import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
-import com.lyeye.dentalappointmentsystem.welcome.LoginFragment;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class PayActivity extends AppCompatActivity {
+public class RegisterActivity extends Activity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final int CAMERA_REQ_CODE = 111;
     public static final int DECODE = 1;
@@ -50,19 +49,17 @@ public class PayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay);
+        setContentView(R.layout.activity_register);
         init();
-
     }
 
     private void init() {
         sharedPreferences = getSharedPreferences("JsonInfo", MODE_PRIVATE);
         userId = String.valueOf(sharedPreferences.getInt("userId", 999999999));
         userName = sharedPreferences.getString("userName", "");
-        hospitalName = sharedPreferences.getString("hospitalName", "");
     }
 
-    public void Pay_Scan(View view) {
+    public void Register_Scan(View view) {
         requestPermission(CAMERA_REQ_CODE, DECODE);
     }
 
@@ -113,30 +110,12 @@ public class PayActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SCAN_ONE) {
             HmsScan obj = data.getParcelableExtra(ScanUtil.RESULT);
-            if (isNumeric(obj.showResult)) {
-                SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(PayActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE);
-                sweetAlertDialog
-                        .setTitleText("确认支付？")
-                        .setCustomImage(R.mipmap.ic_paypay)
-                        .setContentText("您需要支付" + obj.showResult + "大洋")
-                        .setConfirmText("确认")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                pay(obj.showResult);
-                            }
-                        })
-                        .setCancelText("取消")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
-                        })
-                        .show();
+            System.out.println("obj.showResult: " + obj.showResult);
+            if (obj.showResult.contains("诊所")) {
+                register(obj.showResult);
             } else {
-                SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(PayActivity.this, SweetAlertDialog.WARNING_TYPE);
-                sweetAlertDialog.setContentText("请扫描正确的收款码").setCancelText("重新扫描").setConfirmText("返回")
+                SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(RegisterActivity.this, SweetAlertDialog.WARNING_TYPE);
+                sweetAlertDialog.setContentText("请扫描医院提供的登记码").setCancelText("重新扫描").setConfirmText("返回")
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -153,7 +132,7 @@ public class PayActivity extends AppCompatActivity {
         }
     }
 
-    private void pay(String amount) {
+    private void register(String result) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -162,37 +141,69 @@ public class PayActivity extends AppCompatActivity {
                     String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
                     String json = "{\n" +
                             "\t\"userId\":\"" + userId + "\",\n" +
-                            "\t\"payer\":\"" + userName + "\",\n" +
-                            "\t\"payee\":\"" + hospitalName + "\",\n" +
-                            "\t\"amount\":\"" + amount + "\",\n" +
+                            "\t\"userName\":\"" + userName + "\",\n" +
+                            "\t\"hospitalName\":\"" + result + "\",\n" +
                             "\t\"date\":\"" + date + "\",\n" +
                             "\t\"time\":\"" + time + "\"\n" +
                             "}";
                     OkHttpClient okHttpClient = new OkHttpClient();
                     Request request = new Request.Builder()
-                            .url(UrlUtil.getURL("pay?userId=" + userId + "&amount=" + amount))
+                            .url(UrlUtil.getURL("checkIn?userId=" + userId))
                             .post(RequestBody.create(MediaType.parse("application/json"), json))
                             .build();
-                    okHttpClient.newCall(request).execute();
-                    Log.d(null, "付款成功");
-                    runOnUiThread(new Runnable() {
+                    okHttpClient.newCall(request).enqueue(new Callback() {
                         @Override
-                        public void run() {
-                            ToastUtil.showMsg(PayActivity.this, "正在付款");
-                            Intent intent = new Intent(PayActivity.this, PayResultActivity.class);
-                            startActivity(intent);
-                            ToastUtil.showMsg(PayActivity.this, "付款成功");
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.showMsg(RegisterActivity.this, "网络请求失败");
+                                }
+                            });
+                            System.out.println("error: " + e);
                         }
-                    });
 
-                } catch (Exception e) {
-                    Log.d(null, "付款失败：" + e);
-                    runOnUiThread(new Runnable() {
                         @Override
-                        public void run() {
-                            ToastUtil.showMsg(PayActivity.this, "付款失败");
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            String responseData = response.body().string();
+                            if (responseData.equals("SUCCESS")) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(RegisterActivity.this, SweetAlertDialog.SUCCESS_TYPE);
+                                        sweetAlertDialog.setTitleText("签到成功")
+                                                .setContentText("目前所在的诊所为" + result)
+                                                .setConfirmText("返回首页")
+                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                                        startActivity(intent);
+                                                    }
+                                                }).setCancelText("重新扫描")
+                                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                        sweetAlertDialog.dismiss();
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                });
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(RegisterActivity.this, RegisterActivity.class);
+                                        startActivity(intent);
+                                        ToastUtil.showMsg(RegisterActivity.this, "登记失败");
+                                    }
+                                });
+                            }
                         }
                     });
+                } catch (Exception e) {
+                    System.out.println("异常：" + e);
                 }
             }
         }).start();
@@ -201,15 +212,10 @@ public class PayActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Intent intent = new Intent(PayActivity.this, MainActivity.class);
+            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             startActivity(intent);
             return false;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    public static boolean isNumeric(String str) {
-        Pattern pattern = Pattern.compile("[0-9]*");
-        return pattern.matcher(str).matches();
     }
 }

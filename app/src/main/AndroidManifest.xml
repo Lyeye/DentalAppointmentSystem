@@ -45,13 +45,12 @@
         <activity android:name=".administration.UserAppointmentActivity" />
         <activity android:name=".administration.UserListActivity" />
         <activity android:name=".remote.JoinRoomActivity" />
-        <activity android:name=".appointment.TimeAppointmentActivity" />
         <activity android:name=".appointment.DateSelectionActivity">
 
         </activity>
         <activity android:name=".appointment.AppointmentDetailActivity" />
-        <activity android:name=".scan.PayActivity" />
-        <activity android:name=".scan.PayResultActivity" />
+        <activity android:name=".pay.PayActivity" />
+        <activity android:name=".pay.PayResultActivity" />
         <activity android:name=".family.FamilyAppointmentInfoActivity" />
         <activity android:name=".family.FamilyNoticeInfoActivity" />
         <activity android:name=".remote.RemoteActivity" />
@@ -59,7 +58,7 @@
         <activity android:name=".notice.NoticeActivity" />
         <activity android:name=".family.MyFamilyActivity" />
         <activity android:name=".appointment.AppointmentActivity" />
-        <activity android:name=".scan.RegisterActivity" />
+        <activity android:name=".register.RegisterActivity" />
         <activity android:name=".home.MainActivity" />
         <activity android:name=".welcome.WelcomeActivity">
             <intent-filter>

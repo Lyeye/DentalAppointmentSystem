@@ -39,11 +39,11 @@ import com.lyeye.dentalappointmentsystem.adapter.AppointmentInfoRecyclerViewAdap
 import com.lyeye.dentalappointmentsystem.appointment.AppointmentActivity;
 import com.lyeye.dentalappointmentsystem.camera.CameraActivity;
 import com.lyeye.dentalappointmentsystem.family.MyFamilyActivity;
-import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
+
 import com.lyeye.dentalappointmentsystem.information.MyInformationActivity;
 import com.lyeye.dentalappointmentsystem.notice.NoticeActivity;
-import com.lyeye.dentalappointmentsystem.scan.PayActivity;
-import com.lyeye.dentalappointmentsystem.scan.RegisterActivity;
+import com.lyeye.dentalappointmentsystem.pay.PayActivity;
+import com.lyeye.dentalappointmentsystem.register.RegisterActivity;
 import com.lyeye.dentalappointmentsystem.remote.JoinRoomActivity;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
@@ -425,7 +425,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }.sendEmptyMessageDelayed(0, 2000);
         } else {
-            DaoManager.getInstance().closeConnection();
             finishAffinity();
             ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
             activityManager.killBackgroundProcesses(this.getPackageName());

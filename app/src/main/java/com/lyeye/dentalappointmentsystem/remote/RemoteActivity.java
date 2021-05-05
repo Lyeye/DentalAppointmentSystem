@@ -3,7 +3,6 @@ package com.lyeye.dentalappointmentsystem.remote;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,29 +10,20 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.scan.RegisterActivity;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import im.zego.zegoexpress.ZegoExpressEngine;
 import im.zego.zegoexpress.constants.ZegoScenario;
 import im.zego.zegoexpress.entity.ZegoCanvas;
 import im.zego.zegoexpress.entity.ZegoUser;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class RemoteActivity extends AppCompatActivity {
 

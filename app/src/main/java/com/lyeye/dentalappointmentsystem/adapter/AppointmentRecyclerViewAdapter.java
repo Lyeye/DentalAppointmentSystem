@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.appointment.AppointmentActivity;
-import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
-import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
+
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 
 import org.jetbrains.annotations.NotNull;

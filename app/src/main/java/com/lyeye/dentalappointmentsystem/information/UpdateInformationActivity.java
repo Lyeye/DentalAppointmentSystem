@@ -12,8 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.User;
-import com.lyeye.dentalappointmentsystem.impl.UserImpl;
+
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 

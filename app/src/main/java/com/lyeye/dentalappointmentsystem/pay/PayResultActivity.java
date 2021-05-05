@@ -1,4 +1,4 @@
-package com.lyeye.dentalappointmentsystem.scan;
+package com.lyeye.dentalappointmentsystem.pay;
 
 import android.content.Intent;
 import android.os.Bundle;

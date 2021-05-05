@@ -12,14 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarView;
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.impl.AppointmentInfoImpl;
-import com.lyeye.dentalappointmentsystem.util.ToastUtil;
+
 import com.lyeye.dentalappointmentsystem.util.UrlUtil;
 import com.maning.calendarlibrary.MNCalendar;
-import com.maning.calendarlibrary.listeners.OnCalendarItemClickListener;
-import com.maning.calendarlibrary.model.MNCalendarConfig;
+
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;

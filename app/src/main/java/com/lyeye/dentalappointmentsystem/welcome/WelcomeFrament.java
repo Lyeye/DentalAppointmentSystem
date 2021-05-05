@@ -19,14 +19,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.lyeye.dentalappointmentsystem.R;
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
-import com.lyeye.dentalappointmentsystem.impl.UserImpl;
+
 
 public class WelcomeFrament extends Fragment {
 
     private LoginFragment loginFragment;
     private SharedPreferences sharedPreferences;
     private String userEmail;
-    private UserImpl userImpl;
+
     private WelcomeActivity welcomeActivity;
 
     private Button button_welcome;
@@ -44,7 +44,7 @@ public class WelcomeFrament extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         welcomeActivity = (WelcomeActivity) getActivity();
-        userImpl = new UserImpl(welcomeActivity);
+
         button_welcome = view.findViewById(R.id.btn_fw_start);
         button_welcome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,19 +53,19 @@ public class WelcomeFrament extends Fragment {
 
                 sharedPreferences = welcomeActivity.getSharedPreferences("user_info", Context.MODE_PRIVATE);
                 userEmail = sharedPreferences.getString("userEmail", "");
-                if (userEmail == "" || userImpl.findUserByEmail(userEmail) == null) {
-                    loginFragment = new LoginFragment();
-                    FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction
-                            .addToBackStack(null)
-                            .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
-                            .replace(R.id.fl_swl_container, loginFragment)
-                            .commitAllowingStateLoss();
-                } else {
-                    Intent intent = new Intent(welcomeActivity, MainActivity.class);
-                    startActivity(intent);
-                }
+//                if (userEmail == "" || userImpl.findUserByEmail(userEmail) == null) {
+//                    loginFragment = new LoginFragment();
+//                    FragmentManager fragmentManager = welcomeActivity.getSupportFragmentManager();
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    fragmentTransaction
+//                            .addToBackStack(null)
+//                            .setCustomAnimations(R.anim.rotate_in, R.anim.rotate_out)
+//                            .replace(R.id.fl_swl_container, loginFragment)
+//                            .commitAllowingStateLoss();
+//                } else {
+//                    Intent intent = new Intent(welcomeActivity, MainActivity.class);
+//                    startActivity(intent);
+//                }
             }
         });
         textView_change_user = view.findViewById(R.id.tv_fw_change_user);

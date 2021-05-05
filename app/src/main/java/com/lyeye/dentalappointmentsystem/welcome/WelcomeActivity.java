@@ -12,9 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.greendao.DaoManager;
+
 import com.lyeye.dentalappointmentsystem.home.MainActivity;
 import com.lyeye.dentalappointmentsystem.util.ToastUtil;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,6 +40,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         start();
+        ZXingLibrary.initDisplayOpinion(this);
     }
 
     private void start() {
@@ -70,7 +72,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }.sendEmptyMessageDelayed(0, 2000);
         } else {
-            DaoManager.getInstance().closeConnection();
             finishAffinity();
             ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
             activityManager.killBackgroundProcesses(this.getPackageName());

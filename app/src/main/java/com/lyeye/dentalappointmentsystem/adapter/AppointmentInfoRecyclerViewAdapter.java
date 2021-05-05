@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.lyeye.dentalappointmentsystem.R;
-import com.lyeye.dentalappointmentsystem.entity.AppointmentInfo;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -3,28 +3,209 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
-    android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="点击进行扫码支付"
-        android:layout_marginBottom="80dp"
-        android:textStyle="bold"
-        android:textSize="30dp"></TextView>
+        android:layout_gravity="center"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:cardUseCompatPadding="true">
 
-    <Button
-        android:id="@+id/btn_scan_pay"
-        android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="15dp"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:text="本次就诊账单：">
+
+            </TextView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="25dp"
+                    android:text="问诊预约费用为："
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"></TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="90元"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/orange"
+                    android:textSize="25dp"></TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="25dp"
+                    android:text="诊断费用为："
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"></TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="100元"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/orange"
+                    android:textSize="25dp"></TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="25dp"
+                    android:text="药材费用为："
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"></TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="130元"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/orange"
+                    android:textSize="25dp"></TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="25dp"
+                    android:text="收款方："
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_pay_payee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="**诊所"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="30dp"></TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="25dp"
+                    android:text="总计："
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"></TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="320元"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"
+                    android:textSize="50dp"></TextView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:drawableTop="@mipmap/ic_pay"
-        android:background="@drawable/bg_main_btn_5"
-        android:text="扫码付款"
-        android:onClick="Pay_Scan" />
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/red"
+        android:drawableBottom="@mipmap/ic_bottom"
+        android:text="长按下方二维码进行付款"></TextView>
+
+    <ImageView
+        android:id="@+id/iv_pay_QRCode"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"></ImageView>
+
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_scan_pay"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="50dp"-->
+    <!--        android:paddingTop="10dp"-->
+    <!--        android:paddingBottom="10dp"-->
+    <!--        android:drawableTop="@mipmap/ic_pay"-->
+    <!--        android:background="@drawable/bg_main_btn_5"-->
+    <!--        android:text="扫码付款"-->
+    <!--        android:onClick="Pay_Scan" />-->
 
 </LinearLayout>
