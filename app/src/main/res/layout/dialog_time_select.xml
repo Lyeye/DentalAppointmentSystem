@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/gray_cc"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="20dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_td_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff692bf"
+            android:gravity="center"
+            android:text="选择预约时间"
+            android:textSize="35dp"
+            android:textStyle="bold"></TextView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_td_am1"
+                android:layout_width="130dp"
+                android:layout_height="80dp"
+                android:elevation="10dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/bg_am_time_select_btn"
+                android:text="8:00-9:00"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/btn_td_am2"
+                android:layout_width="130dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_am_time_select_btn"
+                android:text="9:00-10:00"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_td_am3"
+                android:layout_width="130dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/bg_am_time_select_btn"
+                android:text="10:00-11:00"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/btn_td_am4"
+                android:layout_width="130dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_am_time_select_btn"
+                android:text="11:00-12:00"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_td_pm1"
+                android:layout_width="130dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/bg_am_time_select_btn"
+                android:text="14:30-15:30"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/btn_td_pm2"
+                android:layout_width="130dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_am_time_select_btn"
+                android:text="15:30-16:30"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_td_pm3"
+                android:layout_width="130dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/bg_am_time_select_btn"
+                android:text="16:30-17:30"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/btn_td_pm4"
+                android:layout_width="130dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_am_time_select_btn"
+                android:text="17:30-18:30"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:id="@+id/tv_td_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="取消"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:textStyle="bold"></TextView>
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+
+

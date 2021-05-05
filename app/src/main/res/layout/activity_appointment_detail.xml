@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_moon"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".appointment.AppointmentDetailActivity">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/gray_cc"
+        android:padding="10dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="10dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="病症信息"
+                    android:textColor="@color/black"
+                    android:textSize="35dp"
+                    android:textStyle="bold"></TextView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="病症："
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"></TextView>
+
+                <org.angmarch.views.NiceSpinner
+                    android:id="@+id/ns_ad_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="请选择病症"
+                    android:textStyle="italic"
+                    android:textSize="30dp"
+                    app:textTint="@color/red"></org.angmarch.views.NiceSpinner>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="病发程度："
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"></TextView>
+
+                <org.angmarch.views.NiceSpinner
+                    android:id="@+id/ns_ad_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="病症严重程度"
+                    android:textStyle="italic"
+                    android:textSize="30dp"
+                    app:textTint="@color/red"></org.angmarch.views.NiceSpinner>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="是否需要远程珍护："
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"></TextView>
+
+                <org.angmarch.views.NiceSpinner
+                    android:id="@+id/ns_ad_remote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="是否需要远程珍护"
+                    android:textStyle="italic"
+                    android:textSize="30dp"
+                    app:textTint="@color/orangered"></org.angmarch.views.NiceSpinner>
+
+                <!--                <TextView-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="*发病时间："-->
+                <!--                    android:textColor="@color/black"-->
+                <!--                    android:textSize="25dp"-->
+                <!--                    android:textStyle="bold"></TextView>-->
+
+                <!--                <EditText-->
+                <!--                    android:id="@+id/et_ad_startTime"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_margin="10dp"></EditText>-->
+
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:orientation="horizontal">-->
+
+                <!--                    <TextView-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="*严重程度："-->
+                <!--                        android:textColor="@color/black"-->
+                <!--                        android:textSize="25dp"-->
+                <!--                        android:textStyle="bold"></TextView>-->
+
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/tv_ad_level"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_marginLeft="30sp"-->
+                <!--                        android:background="@color/red"-->
+                <!--                        android:gravity="center"-->
+                <!--                        android:padding="5dp"-->
+                <!--                        android:text="严重"-->
+                <!--                        android:textColor="@color/black"-->
+                <!--                        android:textSize="30dp"-->
+                <!--                        android:textStyle="bold"></TextView>-->
+                <!--                </LinearLayout>-->
+
+
+                <!--            </LinearLayout>-->
+
+                <!--            <LinearLayout-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:layout_gravity="center"-->
+                <!--                android:gravity="center"-->
+                <!--                android:orientation="vertical"-->
+                <!--                android:padding="15dp">-->
+
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginBottom="15dp"-->
+                <!--                    android:orientation="horizontal">-->
+
+                <!--                    <Button-->
+                <!--                        android:id="@+id/btn_ad_serious"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_marginRight="25dp"-->
+                <!--                        android:background="@color/red"-->
+                <!--                        android:text="重度持续发作"></Button>-->
+
+                <!--                    <Button-->
+                <!--                        android:id="@+id/btn_ad_medium"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_marginRight="5dp"-->
+                <!--                        android:background="@color/orange"-->
+                <!--                        android:text="中度持续发作"></Button>-->
+                <!--                </LinearLayout>-->
+
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:orientation="horizontal">-->
+
+                <!--                    <Button-->
+                <!--                        android:id="@+id/btn_ad_light"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_marginRight="25dp"-->
+                <!--                        android:background="@color/yellow"-->
+                <!--                        android:text="轻度持续发作"></Button>-->
+
+                <!--                    <Button-->
+                <!--                        android:id="@+id/btn_ad_unimportant"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:background="@color/greenyellow"-->
+                <!--                        android:text="间歇发作"></Button>-->
+                <!--                </LinearLayout>-->
+            </LinearLayout>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="50dp"
+                android:padding="10dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="10dp"
+                app:cardUseCompatPadding="true">
+
+                <TextView
+                    android:id="@+id/tv_ad_appointment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/skyblue"
+                    android:drawableRight="@mipmap/ic_right"
+                    android:gravity="center"
+                    android:text="下一步"
+                    android:textColor="@color/black"
+                    android:textSize="25dp"
+                    android:textStyle="italic"></TextView>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

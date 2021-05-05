@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".register.RegisterActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="点击进行扫码签到"
+        android:layout_marginBottom="80dp"
+        android:textStyle="bold"
+        android:textSize="30dp"></TextView>
+
+    <Button
+        android:id="@+id/btn_scan_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@mipmap/ic_check"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="扫码登记"
+        android:background="@drawable/bg_main_btn_3"
+        android:onClick="Register_Scan" />
+
+</LinearLayout>
